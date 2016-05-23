@@ -1,31 +1,18 @@
-
-"""
-from nltk.tokenize import sent_tokenize, word_tokenize
-
-root = Tk()
-myTextWidget=Text(root,bg="red")
-myFile=open("sampletext.txt","r")
-myText=myFile.read()
-array=word_tokenize(myText)
-myFile.close()
-for i in array:
- myTextWidget.insert(0.0,i)
-myTextWidget.pack(fill=BOTH)
-
-root.mainloop()
-
-""" 
 from  tkinter import *
 from tkinter import filedialog
 from functools import partial
-from nltk.tokenize import sent_tokenize, word_tokenize
+from nltk.tokenize import word_tokenize,sent_tokenize
+import nltk
 
 def process(myText,root):
  myTextWidget=Text(root)
- array=word_tokenize(myText) 
+ array=sent_tokenize(myText)
  for i in array:
-  myTextWidget.insert(0.0,i)
-  myTextWidget.insert(0.0,"\n")
+  words=word_tokenize(i)
+  tagged=nltk.pos_tag(words)
+  namedEnt=nltk.ne_chunk(tagged)
+  myTextWidget.insert(0.0,namedEnt)
+  myTextWidget.insert(0.0,"\n\n\n")
  myTextWidget.pack(fill=BOTH)
  
 def readfile(root):
