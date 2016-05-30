@@ -1,31 +1,28 @@
 from  tkinter import *
 from tkinter import filedialog
 from functools import partial
-from nltk.tokenize import word_tokenize,sent_tokenize
-import nltk
+import sys
+sys.path.insert(0, '/home/rahulranjan/TextMiner/Processor')
+import ne
 
 def process(myText,root):
- myTextWidget=Text(root)
- array=sent_tokenize(myText)
- for i in array:
-  words=word_tokenize(i)
-  tagged=nltk.pos_tag(words)
-  namedEnt=nltk.ne_chunk(tagged)
-  myTextWidget.insert(0.0,namedEnt)
-  myTextWidget.insert(0.0,"\n\n\n")
- myTextWidget.pack(fill=BOTH)
+ 	myTextWidget=Text(root)
+ 	ne_array=ne.extract_entities(myText)
+ 	for i in ne_array:
+ 		myTextWidget.insert(0.0,i+"\n")		
+ 	myTextWidget.pack(fill=BOTH)
  
 def readfile(root):
- root1 = Tk() 
- filename = filedialog.askopenfilename(initialdir = "/home",title = "Choose your file",filetypes = (("Text files","*.txt"),))
- myFile=open(filename,"r")
- myText=myFile.read()
- myTextWidget=Text(root)
- myTextWidget.insert(0.0,myText)
- myTextWidget.pack(fill=BOTH)
- process_but = Button(root,text="Process",fg="red",command=partial(process,myText,root))
- process_but.pack()
- root1.withdraw()
+ 	root1 = Tk() 
+ 	filename = filedialog.askopenfilename(initialdir = "/home/rahulranjan/TextMiner/Data",title = "Choose your file",filetypes = (("Text files","*.txt"),))
+ 	myFile=open(filename,"r")
+ 	myText=myFile.read()
+ 	myTextWidget=Text(root)
+ 	myTextWidget.insert(0.0,myText)
+ 	myTextWidget.pack(fill=BOTH)
+ 	process_but = Button(root,text="Process",fg="red",command=partial(process,myText,root))
+ 	process_but.pack()
+ 	root1.withdraw()
 
 
 
