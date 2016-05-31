@@ -1,7 +1,7 @@
-import nltk
+from nltk import *
 
-def sentTokenize(Text):
-	sent_array=set()
-	for sent in sent_tokenize(text):
-		sent_array.add(sent)
-    return sent_array
+def sentTokenize(text):
+ sent_array=set()
+ for sent in sent_tokenize(text):
+  sent_array.add(sent)
+ return sent_array
