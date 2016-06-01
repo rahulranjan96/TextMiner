@@ -16,8 +16,8 @@ class gui:
 
  def maindisplay(self):
   self.root = Tk()
-  scrollbar = Scrollbar(self.root)
-  scrollbar.pack(side = RIGHT,fill=Y)
+  self.root.minsize(250, 250)
+  self.root.title("TextMiner")
   self.browseButton()
   self.neButton()
   self.posButton()
@@ -54,23 +54,26 @@ class gui:
  def browse(self):
   browse = Tk() 
   self.filename = filedialog.askopenfilename(initialdir = "/home/rahulranjan/TextMiner/Data",title = "Choose your file",filetypes = (("Text files","*.txt"),))
-  self.docview()
+  self.name=self.filename.split('/')[-1]
   browse.destroy()
+  self.docview()
 
 
  def docview(self):
+  docview=Tk()
+  docview.title("Document: "+self.name)
   myFile=open(self.filename,"r+")
   self.myText=myFile.read()
-  myTextWidget=Text(self.root)
+  myTextWidget=Text(docview)
   myTextWidget.insert(0.0,self.myText)
   myTextWidget.pack(fill=BOTH)
+  docview.mainloop()
 
  
  def namedEntity(self):
   ne=Tk()
+  ne.title("Named-Entity List: "+self.name)
   neWidget=Text(ne)
-  scrollbar = Scrollbar(ne)
-  scrollbar.pack(side = RIGHT,fill=Y)
   ne_array=namedEntity.namedEntity(self.myText)
   for i in ne_array:
    neWidget.insert(0.0,i+"\n")		
@@ -80,9 +83,8 @@ class gui:
 
  def partofSpeech(self):
   pos=Tk()
+  pos.title("POS Tagged List: "+self.name)
   posWidget=Text(pos)
-  scrollbar = Scrollbar(pos)
-  scrollbar.pack(side = RIGHT,fill=Y)
   pos_array=partofSpeech.partofSpeech(self.myText)
   for i in pos_array:
    posWidget.insert(0.0,i+"\n")		
@@ -92,21 +94,19 @@ class gui:
 
  def sentTokenize(self):
   st=Tk()
+  st.title("Tokenized Sentences List: "+self.name)
   stWidget=Text(st)
-  scrollbar = Scrollbar(st)
-  scrollbar.pack(side = RIGHT,fill=Y)
   st_array=sentTokenize.sentTokenize(self.myText)
   for i in st_array:
-   stWidget.insert(0.0,i+"\n")		
+   stWidget.insert(0.0,i+"\n\n\n")		
   stWidget.pack(fill=BOTH)
   st.mainloop()
  
 
  def wordTokenize(self):
   wt=Tk()
+  wt.title("Tokenized Words List: "+self.name)
   wtWidget=Text(wt)
-  scrollbar = Scrollbar(wt)
-  scrollbar.pack(side = RIGHT,fill=Y)
   wt_array=wordTokenize.wordTokenize(self.myText)
   for i in wt_array:
    wtWidget.insert(0.0,i+"\n")		
