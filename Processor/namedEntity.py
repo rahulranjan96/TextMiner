@@ -1,4 +1,4 @@
-from nltk import *
+import nltk
 
 def namedEntity(text):
  ne_array=set()
@@ -8,8 +8,8 @@ def namedEntity(text):
     string=""
     for c in chunk.leaves():
      string+=" " + c[0]
-     string+=" : " + chunk.label()
-     ne_array.add(string)
+    string+=" : " + chunk.label()
+    ne_array.add(string)
  return ne_array 
                 
 

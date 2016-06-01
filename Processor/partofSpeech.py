@@ -1,4 +1,4 @@
-from nltk import *
+import nltk
 
 def partofSpeech(text):
  pos_array=set()
