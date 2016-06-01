@@ -1,6 +1,7 @@
 import tkinter
 from  tkinter import *
 from tkinter import filedialog
+import os.path
 import sys
 sys.path.insert(0,'/home/rahulranjan/TextMiner/Processor')
 import namedEntity
@@ -26,6 +27,8 @@ class gui:
   self.posButton()
   self.stButton()
   self.wtButton()
+  self.manualButton()
+  self.getManualButton()
   self.root.mainloop()
  
 
@@ -53,12 +56,20 @@ class gui:
   wtButton=Button(self.root,text="Word Tokenize",bg="red",comman=self.wordTokenize)
   wtButton.pack()
 
+ def manualButton(self):
+  manualButton=Button(self.root,text="Manual Annotate",bg="red",comman=self.manual)
+  manualButton.pack()
+
+ def getManualButton(self):
+  getManualButton=Button(self.root,text="Get Manual Annotations",bg="red",comman=self.getManual)
+  getManualButton.pack()
+
 
  def browse(self):
   browse = Tk() 
   #browse.tk.call('wm','iconphoto',browse._w,self.icon)
   self.filename = filedialog.askopenfilename(initialdir = "/home/rahulranjan/TextMiner/Data",title = "Choose your file",filetypes = (("Text files","*.txt"),))
-  self.name=self.filename.split('/')[-1]
+  self.name=(self.filename.split('/')[-1]).split('.')[0]
   browse.destroy()
   self.docview()
 
@@ -122,10 +133,48 @@ class gui:
   wtWidget.pack(fill=BOTH)
   wt.mainloop()
 
- def iconify(self,root):
-  
-  root.tk.call('wm','iconphoto',root._w,img)
+ def manual(self):
+  self.manual=Tk()
+  #docview.tk.call('wm','iconphoto',docview._w,self.icon)
+  self.manual.title("Manually Annotate: "+self.name)
+  self.manualWidget=Text(self.manual)
+  self.manualWidget.insert(0.0,self.myText)
+  self.manualWidget.pack(fill=BOTH)
+  label_1=Label(self.manual,text="Word")
+  label_2=Label(self.manual,text="Category")
+  self.entry_1=Entry(self.manual)
+  self.entry_2=Entry(self.manual)
+  label_1.pack()
+  label_2.pack()
+  self.entry_1.pack()
+  self.entry_2.pack()
+  self.manual_array=set()
+  submit=Button(self.manual,text="Submit",bg="red",command=self.submit)
+  submit.pack()
+  done=Button(self.manual,text="Done",bg="red",command=self.done)
+  done.pack()
+
+  self.manual.mainloop()
+
+ def submit(self):
+  self.manual_array.add(self.entry_1.get()+"~"+self.entry_2.get())
  
+ def done(self):
+  f = open(self.name + "_manualAnnot.txt","w")
+  for i in self.manual_array:
+   f.write(i)
+   f.write("\n")
+  self.manual.destroy()
+    
+ def getManual(self):
+  manualAnnot=Tk()
+  manualAnnot.title("Manual Annotate: "+self.name)
+  manualFile=open(self.name + "_manualAnnot.txt","r+")
+  manualText=manualFile.read()
+  manualAnnotWidget=Text(manualAnnot)
+  manualAnnotWidget.insert(0.0,manualText)
+  manualAnnotWidget.pack(fill=BOTH)
+  manualAnnot.mainloop()
   
 
 
