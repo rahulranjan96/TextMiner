@@ -2,9 +2,9 @@ import tkinter
 from  tkinter import *
 from tkinter import filedialog
 import os.path
-import sys
+import getpass
 from tkinter import messagebox
-sys.path.insert(0,'/home/sravan/TextMiner/Processor')
+sys.path.insert(0,'/home/'+getpass.getuser()+'/TextMiner/Processor')
 import namedEntity
 import partofSpeech
 import sentTokenize
@@ -21,7 +21,7 @@ class gui:
   self.root = Tk()
   self.root.minsize(250, 250)
   self.root.title("TextMiner")
-  self.icon = tkinter.Image("photo", file="/home/sravan/TextMiner/Data/icon.png")
+  self.icon = tkinter.Image("photo", file="/home/"+getpass.getuser()+"/TextMiner/Data/icon.png")
   self.root.tk.call('wm','iconphoto',self.root._w,self.icon)
   self.browseButton()
   self.neButton()
@@ -67,7 +67,8 @@ class gui:
 
 
  def browse(self):
-  self.filename = filedialog.askopenfilename(initialdir = "/home/sravan/TextMiner/Data",title = "Choose your file",filetypes = (("Text files","*.txt"),))
+
+  self.filename = filedialog.askopenfilename(initialdir = "/home/"+getpass.getuser()+"/TextMiner/Data",title = "Choose your file",filetypes = (("Text files","*.txt"),))
   self.name=(self.filename.split('/')[-1]).split('.')[0]
   self.docview()
 
@@ -86,7 +87,7 @@ class gui:
   S = Scrollbar(docview)
   T = Text(docview,height=20)
   S.pack(side=RIGHT,fill=Y)
-  T.pack(fill=Y)
+  T.pack(expand = 1, fill= BOTH)
   S.config(command=T.yview)
   T.config(yscrollcommand=S.set)
   T.insert(END,data)
@@ -108,7 +109,7 @@ class gui:
     S = Scrollbar(ne)
     T = Text(ne,height=20)
     S.pack(side=RIGHT,fill=Y)
-    T.pack(fill=Y)
+    T.pack(expand = 1, fill= BOTH)
     S.config(command=T.yview)
     T.config(yscrollcommand=S.set)
     T.insert(END,data)
@@ -132,7 +133,7 @@ class gui:
     S = Scrollbar(pos)
     T = Text(pos,height=20)
     S.pack(side=RIGHT,fill=Y)
-    T.pack(fill=Y)
+    T.pack(expand = 1, fill= BOTH)
     S.config(command=T.yview)
     T.config(yscrollcommand=S.set)
     T.insert(END,data)
@@ -158,7 +159,7 @@ class gui:
     S = Scrollbar(st)
     T = Text(st,height=20)
     S.pack(side=RIGHT,fill=Y)
-    T.pack(fill=Y)
+    T.pack(expand = 1, fill= BOTH)
     S.config(command=T.yview)
     T.config(yscrollcommand=S.set)
     T.insert(END,data)
@@ -181,7 +182,7 @@ class gui:
     S = Scrollbar(wt)
     T = Text(wt,height=20)
     S.pack(side=RIGHT,fill=Y)
-    T.pack(fill=Y)
+    T.pack(expand = 1, fill= BOTH)
     S.config(command=T.yview)
     T.config(yscrollcommand=S.set)
     T.insert(END,data)
@@ -200,7 +201,7 @@ class gui:
     self.manual.title("Manually Annotate: "+self.name)
     self.manualWidget=Text(self.manual)
     self.manualWidget.insert(0.0,self.myText)
-    self.manualWidget.pack(fill=BOTH)
+    self.manualWidget.pack(expand = 1, fill= BOTH)
     label_1=Label(self.manual,text="Word")
     label_2=Label(self.manual,text="Category")
     self.entry_1=Entry(self.manual)
@@ -240,7 +241,7 @@ class gui:
     manualText=manualFile.read()
     manualAnnotWidget=Text(manualAnnot)
     manualAnnotWidget.insert(0.0,manualText)
-    manualAnnotWidget.pack(fill=BOTH)
+    manualAnnotWidget.pack(expand = 1, fill= BOTH)
     manualAnnot.mainloop()
   else:
     content = "Please Select a File"
