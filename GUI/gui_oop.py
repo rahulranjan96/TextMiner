@@ -4,7 +4,7 @@ from tkinter import filedialog
 import os.path
 import sys
 from tkinter import messagebox
-sys.path.insert(0,'/home/sravan/TextMiner/Processor')
+sys.path.insert(0,'/home/rahulranjan/TextMiner/Processor')
 import namedEntity
 import partofSpeech
 import sentTokenize
@@ -21,7 +21,7 @@ class gui:
   self.root = Tk()
   self.root.minsize(250, 250)
   self.root.title("TextMiner")
-  self.icon = tkinter.Image("photo", file="/home/sravan/TextMiner/Data/icon.png")
+  self.icon = tkinter.Image("photo", file="/home/rahulranjan/TextMiner/Data/icon.png")
   self.root.tk.call('wm','iconphoto',self.root._w,self.icon)
   self.browseButton()
   self.neButton()
@@ -67,7 +67,7 @@ class gui:
 
 
  def browse(self):
-  self.filename = filedialog.askopenfilename(initialdir = "/home/sravan/TextMiner/Data",title = "Choose your file",filetypes = (("Text files","*.txt"),))
+  self.filename = filedialog.askopenfilename(initialdir = "/home/rahulranjan/TextMiner/Data",title = "Choose your file",filetypes = (("Text files","*.txt"),))
   self.name=(self.filename.split('/')[-1]).split('.')[0]
   self.docview()
 
