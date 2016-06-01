@@ -1,3 +1,4 @@
+import tkinter
 from  tkinter import *
 from tkinter import filedialog
 import sys
@@ -18,6 +19,8 @@ class gui:
   self.root = Tk()
   self.root.minsize(250, 250)
   self.root.title("TextMiner")
+  self.icon = tkinter.Image("photo", file="/home/rahulranjan/TextMiner/Data/icon.gif")
+  self.root.tk.call('wm','iconphoto',self.root._w,self.icon)
   self.browseButton()
   self.neButton()
   self.posButton()
@@ -53,6 +56,7 @@ class gui:
 
  def browse(self):
   browse = Tk() 
+  #browse.tk.call('wm','iconphoto',browse._w,self.icon)
   self.filename = filedialog.askopenfilename(initialdir = "/home/rahulranjan/TextMiner/Data",title = "Choose your file",filetypes = (("Text files","*.txt"),))
   self.name=self.filename.split('/')[-1]
   browse.destroy()
@@ -61,6 +65,7 @@ class gui:
 
  def docview(self):
   docview=Tk()
+  #docview.tk.call('wm','iconphoto',docview._w,self.icon)
   docview.title("Document: "+self.name)
   myFile=open(self.filename,"r+")
   self.myText=myFile.read()
@@ -72,6 +77,7 @@ class gui:
  
  def namedEntity(self):
   ne=Tk()
+  #ne.tk.call('wm','iconphoto',ne._w,self.icon)
   ne.title("Named-Entity List: "+self.name)
   neWidget=Text(ne)
   ne_array=namedEntity.namedEntity(self.myText)
@@ -83,6 +89,7 @@ class gui:
 
  def partofSpeech(self):
   pos=Tk()
+  #pos.tk.call('wm','iconphoto',pos._w,self.icon)
   pos.title("POS Tagged List: "+self.name)
   posWidget=Text(pos)
   pos_array=partofSpeech.partofSpeech(self.myText)
@@ -94,6 +101,7 @@ class gui:
 
  def sentTokenize(self):
   st=Tk()
+  #st.tk.call('wm','iconphoto',st._w,self.icon)
   st.title("Tokenized Sentences List: "+self.name)
   stWidget=Text(st)
   st_array=sentTokenize.sentTokenize(self.myText)
@@ -105,6 +113,7 @@ class gui:
 
  def wordTokenize(self):
   wt=Tk()
+  #wt.tk.call('wm','iconphoto',wt._w,self.icon)
   wt.title("Tokenized Words List: "+self.name)
   wtWidget=Text(wt)
   wt_array=wordTokenize.wordTokenize(self.myText)
@@ -113,7 +122,9 @@ class gui:
   wtWidget.pack(fill=BOTH)
   wt.mainloop()
 
- 
+ def iconify(self,root):
+  
+  root.tk.call('wm','iconphoto',root._w,img)
  
   
 
