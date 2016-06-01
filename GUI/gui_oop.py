@@ -74,12 +74,19 @@ class gui:
  def docview(self):
   docview=Tk()
   #docview.tk.call('wm','iconphoto',docview._w,self.icon)
+  
   docview.title("Document: "+self.name)
-  myFile=open(self.filename,"r+")
-  self.myText=myFile.read()
-  myTextWidget=Text(docview)
-  myTextWidget.insert(0.0,self.myText)
-  myTextWidget.pack(fill=BOTH)
+  f=open(self.filename,"r+")
+  data = f.read()
+  self.myText=data
+  S = Scrollbar(docview)
+  T = Text(docview,height=20)
+  S.pack(side=RIGHT,fill=Y)
+  T.pack(fill=Y)
+  S.config(command=T.yview)
+  T.config(yscrollcommand=S.set)
+  T.insert(END,data)
+  T.config(state=DISABLED)
   docview.mainloop()
 
  
@@ -89,9 +96,18 @@ class gui:
     ne.title("Named-Entity List: "+self.name)
     neWidget=Text(ne)
     ne_array=namedEntity.namedEntity(self.myText)
+    string=""
     for i in ne_array:
-     neWidget.insert(0.0,i+"\n")    
-    neWidget.pack(fill=BOTH)
+     string = string + i + "\n"
+    data = string
+    S = Scrollbar(ne)
+    T = Text(ne,height=20)
+    S.pack(side=RIGHT,fill=Y)
+    T.pack(fill=Y)
+    S.config(command=T.yview)
+    T.config(yscrollcommand=S.set)
+    T.insert(END,data)
+    T.config(state=DISABLED)
     ne.mainloop()
   else:
     content = "Please Select a File"
@@ -104,9 +120,18 @@ class gui:
     pos.title("POS Tagged List: "+self.name)
     posWidget=Text(pos)
     pos_array=partofSpeech.partofSpeech(self.myText)
+    string = ""
     for i in pos_array:
-      posWidget.insert(0.0,i+"\n")    
-    posWidget.pack(fill=BOTH)
+      string = string + i + "\n"
+    data = string  
+    S = Scrollbar(pos)
+    T = Text(pos,height=20)
+    S.pack(side=RIGHT,fill=Y)
+    T.pack(fill=Y)
+    S.config(command=T.yview)
+    T.config(yscrollcommand=S.set)
+    T.insert(END,data)
+    T.config(state=DISABLED)
     pos.mainloop()
   else:
     content = "Please Select a File"
@@ -121,10 +146,19 @@ class gui:
     st.title("Tokenized Sentences List: "+self.name)
     stWidget=Text(st)
     st_array=sentTokenize.sentTokenize(self.myText)
+    string = ""
     for i in st_array:
-      stWidget.insert(0.0,i+"\n\n\n")   
-      stWidget.pack(fill=BOTH)
-      st.mainloop()
+      string = string + i + "\n"
+    data = string  
+    S = Scrollbar(st)
+    T = Text(st,height=20)
+    S.pack(side=RIGHT,fill=Y)
+    T.pack(fill=Y)
+    S.config(command=T.yview)
+    T.config(yscrollcommand=S.set)
+    T.insert(END,data)
+    T.config(state=DISABLED)
+    st.mainloop()
   else:
     content = "Please Select a File"
     messagebox.showinfo("Error! Oops",content)
@@ -135,10 +169,19 @@ class gui:
     wt.title("Tokenized Words List: "+self.name)
     wtWidget=Text(wt)
     wt_array=wordTokenize.wordTokenize(self.myText)
+    string = ""
     for i in wt_array:
-      wtWidget.insert(0.0,i+"\n")   
-      wtWidget.pack(fill=BOTH)
-      wt.mainloop()
+      string = string + i + "\n"
+    data = string  
+    S = Scrollbar(wt)
+    T = Text(wt,height=20)
+    S.pack(side=RIGHT,fill=Y)
+    T.pack(fill=Y)
+    S.config(command=T.yview)
+    T.config(yscrollcommand=S.set)
+    T.insert(END,data)
+    T.config(state=DISABLED)      
+    wt.mainloop()
   else:
     content = "Please Select a File"
     messagebox.showinfo("Error! Oops",content)
