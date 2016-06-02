@@ -9,6 +9,7 @@ import namedEntity
 import partofSpeech
 import sentTokenize
 import wordTokenize
+import MySQLdb
 
 class gui:
  
@@ -77,7 +78,7 @@ class gui:
   #docview.tk.call('wm','iconphoto',docview._w,self.icon)
   #self.icon = tkinter.Image("photo", file="/home/sravan/TextMiner/Data/icon.png")
   #self.root.tk.call('wm','iconbitmap',self.root._w,self.icon)
-  #self.root.iconbitmap(r'/home/sravan/TextMiner/Data/icon.png')
+  #self.root.iconbitmap(r'/home/sravan/TextMiner/Data/images.jpg')
   docview = self.root
   
   docview.title("Document: "+self.name)
@@ -195,9 +196,7 @@ class gui:
 
  def manual(self):
   if hasattr(self,'filename'):
-
     self.manual=Tk()
-    #docview.tk.call('wm','iconphoto',docview._w,self.icon)
     self.manual.title("Manually Annotate: "+self.name)
     self.manualWidget=Text(self.manual)
     self.manualWidget.insert(0.0,self.myText)
@@ -223,6 +222,17 @@ class gui:
 
 
  def submit(self):
+  db = MySQLdb.connect("localhost","root","yuvraj$","manual_annotations")
+  cursor = db.cursor()
+  var1 = self.entry_1.get()
+  print(var1)
+  var2 = self.entry_2.get()
+  sql = "INSERT INTO annotations(name, \
+         category) \
+         VALUES ('%s','%s')" % \
+         (var1,var2)
+  cursor.execute(sql)
+  db.commit()
   self.manual_array.add(self.entry_1.get()+"~"+self.entry_2.get())
  
  def done(self):
