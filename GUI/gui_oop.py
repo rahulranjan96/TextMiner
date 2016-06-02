@@ -210,6 +210,8 @@ class gui:
     self.entry_1.pack()
     self.entry_2.pack()
     self.manual_array=set()
+    self.entry_3=Entry(self.manual)
+    self.entry_3.pack()
     submit=Button(self.manual,text="Submit",bg="red",command=self.submit)
     submit.pack()
     done=Button(self.manual,text="Done",bg="red",command=self.done)
@@ -222,11 +224,22 @@ class gui:
     messagebox.showinfo("Error! Oops",content)
 
  def highlight(self):
-  self.manualWidget.tag_configure("RED", background="yellow")
-  self.manualWidget.tag_add("RED", "sel.first", "sel.last")
+  search=self.entry_3.get()
+  start=1.0
+  first=self.manualWidget.search(search,1.0,stopindex=END)
+  self.manualWidget.tag_configure("YELLOW", background="yellow")
+  self.manualWidget.tag_remove("YELLOW", 1.0, "end")
+  while first:
+   row,col=first.split('.')
+   last=int(col)+len(search)
+   last=row+'.'+str(last)
+   self.manualWidget.tag_add("YELLOW", first,last)
+   start=last
+   first=self.manualWidget.search(search,start,stopindex=END)
+
 
  def submit(self):
-  db = MySQLdb.connect("localhost","root","yuvraj$","manual_annotations")
+  db = MySQLdb.connect("localhost","root","","manual_annotations")
   cursor = db.cursor()
   var1 = self.entry_1.get()
   print(var1)
@@ -248,7 +261,6 @@ class gui:
     
  def getManual(self):
   if hasattr(self,'filename'):
-
     manualAnnot=Tk()
     manualAnnot.title("Manual Annotate: "+self.name)
     manualFile=open(self.name + "_manualAnnot.txt","r+")
