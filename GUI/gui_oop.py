@@ -214,12 +214,16 @@ class gui:
     submit.pack()
     done=Button(self.manual,text="Done",bg="red",command=self.done)
     done.pack()
-
+    highlight=Button(self.manual,text="HIGHLIGHT",bg="red",command=self.highlight)
+    highlight.pack()
     self.manual.mainloop()
   else:
     content = "Please Select a File"
     messagebox.showinfo("Error! Oops",content)
 
+ def highlight(self):
+  self.manualWidget.tag_configure("RED", background="yellow")
+  self.manualWidget.tag_add("RED", "sel.first", "sel.last")
 
  def submit(self):
   db = MySQLdb.connect("localhost","root","yuvraj$","manual_annotations")
