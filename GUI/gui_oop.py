@@ -31,7 +31,6 @@ class gui:
   self.wtButton()
   self.manualButton()
   self.getManualButton()
-  self.getfromDictButton()
 
   self.root.mainloop()
  
