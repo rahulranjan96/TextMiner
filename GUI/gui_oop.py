@@ -31,6 +31,7 @@ class gui:
   self.wtButton()
   self.manualButton()
   self.getManualButton()
+  self.getfromDictButton()
   self.root.mainloop()
  
 
@@ -40,31 +41,36 @@ class gui:
  
 
  def neButton(self):
-  neButton=Button(self.root,text="NE Miner",bg="red",comman=self.namedEntity)
+  neButton=Button(self.root,text="NE Miner",bg="red",command=self.namedEntity)
   neButton.pack()
  
 
  def posButton(self):
-  posButton=Button(self.root,text="POS Tagger",bg="red",comman=self.partofSpeech)
+  posButton=Button(self.root,text="POS Tagger",bg="red",command=self.partofSpeech)
   posButton.pack()
  
 
  def stButton(self):
-  stButton=Button(self.root,text="Sent. Tokenize",bg="red",comman=self.sentTokenize)
+  stButton=Button(self.root,text="Sent. Tokenize",bg="red",command=self.sentTokenize)
   stButton.pack()
  
 
  def wtButton(self):
-  wtButton=Button(self.root,text="Word Tokenize",bg="red",comman=self.wordTokenize)
+  wtButton=Button(self.root,text="Word Tokenize",bg="red",command=self.wordTokenize)
   wtButton.pack()
 
  def manualButton(self):
-  manualButton=Button(self.root,text="Manual Annotate",bg="red",comman=self.manual)
+  manualButton=Button(self.root,text="Manual Annotate",bg="red",command=self.manual)
   manualButton.pack()
 
  def getManualButton(self):
-  getManualButton=Button(self.root,text="Get Manual Annotations",bg="red",comman=self.getManual)
+  getManualButton=Button(self.root,text="Get Manual Annotations",bg="red",command=self.getManual)
   getManualButton.pack()
+
+ """def getfromDictButton(self):
+  getfromDictButton(self.root,text="Get from Dictionary",bg="red",command=self.getfromDict)
+  getfromDictButton.pack()"""
+
 
 
  def browse(self):
@@ -119,6 +125,7 @@ class gui:
   else:
     content = "Please Select a File"
     messagebox.showinfo("Error! Oops",content)
+
  
  def partofSpeech(self):
   #pos.tk.call('wm','iconphoto',pos._w,self.icon)
@@ -169,6 +176,8 @@ class gui:
   else:
     content = "Please Select a File"
     messagebox.showinfo("Error! Oops",content)
+
+
  def wordTokenize(self):
   #wt.tk.call('wm','iconphoto',wt._w,self.icon)
   if hasattr(self,'filename'):
@@ -225,6 +234,7 @@ class gui:
 
  def highlight(self):
   search=self.entry_3.get()
+  search=" "+search+" "
   start=1.0
   first=self.manualWidget.search(search,1.0,stopindex=END)
   self.manualWidget.tag_configure("YELLOW", background="yellow")
@@ -273,7 +283,22 @@ class gui:
     content = "Please Select a File"
     messagebox.showinfo("Error! Oops",content)
 
-  
+ """def getfromDict(self):
+  self.dic=Tk()
+  self.dic.title("Dictionary Highlight: "+self.name)
+  self.dicWidget=Text(self.dic)
+  self.dicWidget.insert(0.0,self.myText)
+  self.manualWidget.pack(expand = 1, fill= BOTH)
+  browseDicButton = Button(self.dic,text="Browse Dictionary",bg="red",command=self.browsedic)
+  browseDicButton.pack()
+  highlightdic=Button(self.manual,text="HIGHLIGHT",bg="red",command=self.highlightdic)
+  highlightdic.pack()
+   
+ def browsedic(self):
+  self.dictname = filedialog.askopenfilename(initialdir = "/home/"+getpass.getuser()+"/TextMiner/Data",title = "Choose your file",filetypes = (("Text files","*.txt"),))
+"""
+    
+
 
 
 
