@@ -31,7 +31,11 @@ class gui:
   self.wtButton()
   self.manualButton()
   self.getManualButton()
+  self.DictionaryButton()
   self.root.mainloop()
+ def DictionaryButton(self):
+  DictionaryButton = Button(self.root,text="Give Dictionary",bg="red",command=self.Dictionary)
+  DictionaryButton.pack()
  
 
  def browseButton(self):
@@ -65,6 +69,20 @@ class gui:
  def getManualButton(self):
   getManualButton=Button(self.root,text="Get Manual Annotations",bg="red",command=self.getManual)
   getManualButton.pack()
+
+ def Dictionary(self):
+  self.filename1 = filedialog.askopenfilename(initialdir = "/home/"+getpass.getuser()+"/TextMiner/Data",title = "Choose your file",filetypes = (("Text files","*.txt"),))
+  self.name1=(self.filename1.split('/')[-1]).split('.')[0]
+  with open(self.filename1) as fp:
+    for line in fp:
+      print(line)
+ def highlightDictionary(self):
+  with open(self.filename1) as fp:
+    for line in fp:
+      self.name=line
+      self.highlightNew
+
+
 
 
  def getPerson(self):
@@ -134,7 +152,9 @@ class gui:
   T.insert(END,data)
   T.config(state=DISABLED)
   getPersonButton=Button(self.root,text="Get Person Annotated",bg="red",command=self.getPerson)
-  getPersonButton.pack()
+  getPersonButton.pack(side=LEFT)
+  HighlighDictionaryButton =Button(self.root,text"Highlight Dictionary",bg="red",command=self.highlightDictionary)
+  HighlighDictionaryButton.pack(side=RIGHT)
   docview.mainloop()
 
  
