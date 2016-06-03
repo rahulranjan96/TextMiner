@@ -31,6 +31,7 @@ class gui:
   self.wtButton()
   self.manualButton()
   self.getManualButton()
+  #self.getPersonButton()
   self.root.mainloop()
  
 
@@ -45,28 +46,67 @@ class gui:
  
 
  def posButton(self):
-  posButton=Button(self.root,text="POS Tagger",bg="red",comman=self.partofSpeech)
+  posButton=Button(self.root,text="POS Tagger",bg="red",command=self.partofSpeech)
   posButton.pack()
  
 
  def stButton(self):
-  stButton=Button(self.root,text="Sent. Tokenize",bg="red",comman=self.sentTokenize)
+  stButton=Button(self.root,text="Sent. Tokenize",bg="red",command=self.sentTokenize)
   stButton.pack()
  
 
  def wtButton(self):
-  wtButton=Button(self.root,text="Word Tokenize",bg="red",comman=self.wordTokenize)
+  wtButton=Button(self.root,text="Word Tokenize",bg="red",command=self.wordTokenize)
   wtButton.pack()
 
  def manualButton(self):
-  manualButton=Button(self.root,text="Manual Annotate",bg="red",comman=self.manual)
+  manualButton=Button(self.root,text="Manual Annotate",bg="red",command=self.manual)
   manualButton.pack()
 
  def getManualButton(self):
-  getManualButton=Button(self.root,text="Get Manual Annotations",bg="red",comman=self.getManual)
+  getManualButton=Button(self.root,text="Get Manual Annotations",bg="red",command=self.getManual)
   getManualButton.pack()
 
+ def getPerson(self):
+  db = MySQLdb.connect("localhost","root","","manual_annotations")
+  cursor = db.cursor()
+  sql = """SELECT name FROM annotations WHERE category = 'Person' """ 
+  cursor.execute(sql)
+  results = cursor.fetchall()
+  for row in results:
+    self.name = row[0]
+    #print(self.name)
+    self.highlightNew()
+    
+  db.commit()
 
+ def highlightNew(self):
+  try:
+    search=self.name
+    #print(search)
+    search = " " + search + " "
+    start=1.0
+    first=self.T.search(search,1.0,stopindex=END)
+    self.T.tag_configure("YELLOW", background="yellow")
+    self.T.tag_remove("YELLOW", 1.0, "end")
+    while first:
+     row,col=first.split('.')
+     col = int(col) + 1
+     first = row+'.'+str(col)
+     last=int(col)+len(search) - 2
+     last=row+'.'+str(last)
+     row,col=last.split('.') 
+     print(first)
+     print(last)
+     self.T.tag_add("YELLOW", first,last)
+     start=last
+     first=self.T.search(search,start,stopindex=END)
+  except:
+    print(self.name)
+    start=1.0
+    first=self.T.search(search,1.0,stopindex=END)
+    print("exception Not")
+    abc = ''
  def browse(self):
 
   self.filename = filedialog.askopenfilename(initialdir = "/home/"+getpass.getuser()+"/TextMiner/Data",title = "Choose your file",filetypes = (("Text files","*.txt"),))
@@ -87,12 +127,15 @@ class gui:
   self.myText=data
   S = Scrollbar(docview)
   T = Text(docview,height=20)
+  self.T = T
   S.pack(side=RIGHT,fill=Y)
   T.pack(expand = 1, fill= BOTH)
   S.config(command=T.yview)
   T.config(yscrollcommand=S.set)
   T.insert(END,data)
   T.config(state=DISABLED)
+  getPersonButton=Button(self.root,text="Get Person Annotated",bg="red",command=self.getPerson)
+  getPersonButton.pack()
   docview.mainloop()
 
  
@@ -224,18 +267,29 @@ class gui:
     messagebox.showinfo("Error! Oops",content)
 
  def highlight(self):
-  search=self.entry_3.get()
-  start=1.0
-  first=self.manualWidget.search(search,1.0,stopindex=END)
-  self.manualWidget.tag_configure("YELLOW", background="yellow")
-  self.manualWidget.tag_remove("YELLOW", 1.0, "end")
-  while first:
-   row,col=first.split('.')
-   last=int(col)+len(search)
-   last=row+'.'+str(last)
-   self.manualWidget.tag_add("YELLOW", first,last)
-   start=last
-   first=self.manualWidget.search(search,start,stopindex=END)
+  try:
+    search=self.entry_3.get()
+    search = " " + search + " "
+    start=1.0
+    first=self.manualWidget.search(search,1.0,stopindex=END)
+    self.manualWidget.tag_configure("YELLOW", background="yellow")
+    self.manualWidget.tag_remove("YELLOW", 1.0, "end")
+    while first:
+     row,col=first.split('.')
+     col = int(col) + 1
+     first = row+'.'+str(col)
+     last=int(col)+len(search) - 2
+     last=row+'.'+str(last)
+     row,col=last.split('.') 
+     print(first)
+     print(last)
+     self.manualWidget.tag_add("YELLOW", first,last)
+     start=last
+     first=self.manualWidget.search(search,start,stopindex=END)
+  except:
+    content = "Please Enter a text in highlight box"
+    messagebox.showinfo("Error! Oops",content)
+
 
 
  def submit(self):
