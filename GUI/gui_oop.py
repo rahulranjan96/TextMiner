@@ -10,6 +10,7 @@ import partofSpeech
 import sentTokenize
 import wordTokenize
 import MySQLdb
+from functools import partial
 
 class gui:
  
@@ -75,60 +76,24 @@ class gui:
   self.name1=(self.filename1.split('/')[-1]).split('.')[0]
   with open(self.filename1) as fp:
     for line in fp:
+      line = line.strip('\n')
       print(line)
- def highlightDictionary(self):
+ def highlightDictionary(self,widget):
+  print("Sravan is a good boy")
   with open(self.filename1) as fp:
     for line in fp:
-      self.name=line
-      self.highlightNew
+      line = line.strip('\n')
+      self.highlightGreen(line,widget)
 
 
 
 
- def getPerson(self):
-  db = MySQLdb.connect("localhost","root","","manual_annotations")
-  cursor = db.cursor()
-  sql = """SELECT name FROM annotations WHERE category = 'Person' """ 
-  cursor.execute(sql)
-  results = cursor.fetchall()
-  for row in results:
-    self.name = row[0]
-    #print(self.name)
-    self.highlightNew()
-    
-  db.commit()
- def highlightNew(self):
-  try:
-    search=self.name
-    #print(search)
-    search = " " + search + " "
-    start=1.0
-    first=self.T.search(search,1.0,stopindex=END)
-    self.T.tag_configure("YELLOW", background="yellow")
-    self.T.tag_remove("YELLOW", 1.0, "end")
-    while first:
-     row,col=first.split('.')
-     col = int(col) + 1
-     first = row+'.'+str(col)
-     last=int(col)+len(search) - 2
-     last=row+'.'+str(last)
-     row,col=last.split('.') 
-     print(first)
-     print(last)
-     self.T.tag_add("YELLOW", first,last)
-     start=last
-     first=self.T.search(search,start,stopindex=END)
-  except:
-    print(self.name)
-    start=1.0
-    first=self.T.search(search,1.0,stopindex=END)
-    print("exception Not")
-    abc = ''
  def browse(self):
 
   self.filename = filedialog.askopenfilename(initialdir = "/home/"+getpass.getuser()+"/TextMiner/Data",title = "Choose your file",filetypes = (("Text files","*.txt"),))
   self.name=(self.filename.split('/')[-1]).split('.')[0]
   self.docview()
+
 
  def docview(self):
   self.root=Tk()
@@ -137,25 +102,35 @@ class gui:
   #self.root.tk.call('wm','iconbitmap',self.root._w,self.icon)
   #self.root.iconbitmap(r'/home/sravan/TextMiner/Data/images.jpg')
   docview = self.root
-  
   docview.title("Document: "+self.name)
   f=open(self.filename,"r+")
   data = f.read()
   self.myText=data
   S = Scrollbar(docview)
   T = Text(docview,height=20)
-  self.T = T
   S.pack(side=RIGHT,fill=Y)
   T.pack(expand = 1, fill= BOTH)
   S.config(command=T.yview)
   T.config(yscrollcommand=S.set)
   T.insert(END,data)
   T.config(state=DISABLED)
-  getPersonButton=Button(self.root,text="Get Person Annotated",bg="red",command=self.getPerson)
+  getPersonButton=Button(self.root,text="Get Person Annotated",bg="red",command=partial(self.getPerson,T))
   getPersonButton.pack(side=LEFT)
-  HighlighDictionaryButton =Button(self.root,text"Highlight Dictionary",bg="red",command=self.highlightDictionary)
+  HighlighDictionaryButton =Button(self.root,text="Highlight Dictionary",bg="red",command=partial(self.highlightDictionary,T))
   HighlighDictionaryButton.pack(side=RIGHT)
   docview.mainloop()
+
+
+ def getPerson(self,widget):
+  db = MySQLdb.connect("localhost","root","","manual_annotations")
+  cursor = db.cursor()
+  sql = """SELECT name FROM annotations WHERE category = 'Person' """ 
+  cursor.execute(sql)
+  results = cursor.fetchall()
+  for row in results:
+    name = row[0]
+    self.highlight1(name,widget)
+  db.commit()
 
  
  def namedEntity(self):  #ne.tk.call('wm','iconphoto',ne._w,self.icon)
@@ -232,6 +207,50 @@ class gui:
   else:
     content = "Please Select a File"
     messagebox.showinfo("Error! Oops",content)
+ def highlightGreen(self,text,widget):
+  try:
+    search = " " + text + " "
+    start=1.0
+    first=widget.search(search,1.0,stopindex=END)
+    widget.tag_configure("GREEN", background="green")
+    while first:
+     row,col=first.split('.')
+     col = int(col) + 1
+     first = row+'.'+str(col)
+     last=int(col)+len(search) - 2
+     last=row+'.'+str(last)
+     row,col=last.split('.') 
+     print(first)
+     print(last)
+     widget.tag_add("GREEN", first,last)
+     start=last
+     first=widget.search(search,start,stopindex=END)
+  except:
+    content = "Please Enter a text in highlight box"
+    messagebox.showinfo("Error! Oops",content)
+
+ def highlight1(self,text,widget):
+  try:
+    search = " " + text + " "
+    start=1.0
+    first=widget.search(search,1.0,stopindex=END)
+    widget.tag_configure("YELLOW", background="yellow")
+    while first:
+     row,col=first.split('.')
+     col = int(col) + 1
+     first = row+'.'+str(col)
+     last=int(col)+len(search) - 2
+     last=row+'.'+str(last)
+     row,col=last.split('.') 
+     print(first)
+     print(last)
+     widget.tag_add("YELLOW", first,last)
+     start=last
+     first=widget.search(search,start,stopindex=END)
+  except:
+    content = "Please Enter a text in highlight box"
+    messagebox.showinfo("Error! Oops",content)
+
 
 
  def wordTokenize(self):
@@ -261,42 +280,45 @@ class gui:
 
  def manual(self):
   if hasattr(self,'filename'):
-    self.manual=Tk()
-    self.manual.title("Manually Annotate: "+self.name)
-    self.manualWidget=Text(self.manual)
-    self.manualWidget.insert(0.0,self.myText)
-    self.manualWidget.pack(expand = 1, fill= BOTH)
-    label_1=Label(self.manual,text="Word")
-    label_2=Label(self.manual,text="Category")
-    self.entry_1=Entry(self.manual)
-    self.entry_2=Entry(self.manual)
+    manual=Tk()
+    manual.title("Manually Annotate: "+self.name)
+    manualWidget=Text(manual)
+    manualWidget.insert(0.0,self.myText)
+    manualWidget.pack(expand = 1, fill= BOTH)
+    label_1=Label(manual,text="Word")
+    label_2=Label(manual,text="Category")
+    self.entry_1=Entry(manual)
+    self.entry_2=Entry(manual)
     label_1.pack()
     label_2.pack()
     self.entry_1.pack()
     self.entry_2.pack()
     self.manual_array=set()
-    self.entry_3=Entry(self.manual)
+    self.entry_3=Entry(manual)
     self.entry_3.pack()
-    submit=Button(self.manual,text="Submit",bg="red",command=self.submit)
+    submit=Button(manual,text="Submit",bg="red",command=self.submit)
     submit.pack()
-    done=Button(self.manual,text="Done",bg="red",command=self.done)
+    done=Button(manual,text="Done",bg="red",command=self.done)
     done.pack()
-    highlight=Button(self.manual,text="HIGHLIGHT",bg="red",command=self.highlight)
+    highlight=Button(manual,text="HIGHLIGHT",bg="red",command=partial(self.getText,manualWidget))
     highlight.pack()
-    self.manual.mainloop()
+    manual.mainloop()
   else:
     content = "Please Select a File"
     messagebox.showinfo("Error! Oops",content)
 
- def highlight(self):
+ def getText(self,manualWidget):
+  text=self.entry_3.get()
+  self.highlight(text,manualWidget)
+
+ def highlight(self,text,widget):
 
   try:
-    search=self.entry_3.get()
-    search = " " + search + " "
+    search = " " + text + " "
     start=1.0
-    first=self.manualWidget.search(search,1.0,stopindex=END)
-    self.manualWidget.tag_configure("YELLOW", background="yellow")
-    self.manualWidget.tag_remove("YELLOW", 1.0, "end")
+    first=widget.search(search,1.0,stopindex=END)
+    widget.tag_configure("YELLOW", background="yellow")
+    widget.tag_remove("YELLOW", 1.0, "end")
     while first:
      row,col=first.split('.')
      col = int(col) + 1
@@ -306,9 +328,9 @@ class gui:
      row,col=last.split('.') 
      print(first)
      print(last)
-     self.manualWidget.tag_add("YELLOW", first,last)
+     widget.tag_add("YELLOW", first,last)
      start=last
-     first=self.manualWidget.search(search,start,stopindex=END)
+     first=widget.search(search,start,stopindex=END)
   except:
     content = "Please Enter a text in highlight box"
     messagebox.showinfo("Error! Oops",content)
