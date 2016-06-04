@@ -3,7 +3,6 @@
 3).nltk-data
 4).Tkinter
 5).MySQLdb
-6).OpenNLP(https://github.com/curzona/opennlp-python)
 for installing MySQLdb 
 	go to your terminal and give this command
 	sudo apt-get install python3-mysqldb
@@ -15,4 +14,6 @@ then install PIP and then install nltk using pip
 	sudo pip3 install nltk
 command for installing Tkinter is:
 	sudo pip3 install tkinter
-
+6).OpenNLP(https://github.com/curzona/opennlp-python)
+7).xmlrclib(https://pypi.python.org/pypi/xmlrpclib)
+8).pexpect(sudo pip3 install pexpect)
