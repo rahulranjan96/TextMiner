@@ -20,104 +20,84 @@ class gui:
   
 
  def maindisplay(self):
-  self.root = Tk()
-  self.root.minsize(250, 250)
-  self.root.title("TextMiner")
-  self.icon = tkinter.Image("photo", file="/home/"+getpass.getuser()+"/TextMiner/Data/icon.png")
-  self.root.tk.call('wm','iconphoto',self.root._w,self.icon)
-  self.browseButton()
-  self.neButton()
-  self.posButton()
-  self.stButton()
-  self.wtButton()
-  self.manualButton()
-  self.getManualButton()
-  self.DictionaryButton()
-  self.root.mainloop()
- def DictionaryButton(self):
-  DictionaryButton = Button(self.root,text="Give Dictionary",bg="red",command=self.Dictionary)
-  DictionaryButton.pack()
+  root = Tk()
+  root.minsize(250, 250)
+  root.title("TextMiner")
+  icon = tkinter.Image("photo", file="/home/"+getpass.getuser()+"/TextMiner/Data/icon.png")
+  root.tk.call('wm','iconphoto',root._w,icon)
+  self.browseButton(root)
+  self.neButton(root)
+  self.posButton(root)
+  self.stButton(root)
+  self.wtButton(root)
+  self.manualButton(root)
+  self.getManualButton(root)
+  self.dictionaryButton(root)
+  root.mainloop()
  
 
- def browseButton(self):
-  browseButton = Button(self.root,text="Browse",bg="red",command=self.browse)
+ def browseButton(self,root):
+  browseButton = Button(root,text="Browse",bg="red",command=partial(self.browse,root))
   browseButton.pack()
  
 
- def neButton(self):
-  neButton=Button(self.root,text="NE Miner",bg="red",command=self.namedEntity)
+ def neButton(self,root):
+  neButton=Button(root,text="NE Miner",bg="red",command=self.namedEntity)
   neButton.pack()
  
 
- def posButton(self):
-  posButton=Button(self.root,text="POS Tagger",bg="red",command=self.partofSpeech)
+ def posButton(self,root):
+  posButton=Button(root,text="POS Tagger",bg="red",command=self.partofSpeech)
   posButton.pack()
  
 
- def stButton(self):
-  stButton=Button(self.root,text="Sent. Tokenize",bg="red",command=self.sentTokenize)
+ def stButton(self,root):
+  stButton=Button(root,text="Sent. Tokenize",bg="red",command=self.sentTokenize)
   stButton.pack()
  
 
- def wtButton(self):
-  wtButton=Button(self.root,text="Word Tokenize",bg="red",command=self.wordTokenize)
+ def wtButton(self,root):
+  wtButton=Button(root,text="Word Tokenize",bg="red",command=self.wordTokenize)
   wtButton.pack()
 
- def manualButton(self):
-  manualButton=Button(self.root,text="Manual Annotate",bg="red",command=self.manual)
+ def manualButton(self,root):
+  manualButton=Button(root,text="Manual Annotate",bg="red",command=self.manual)
   manualButton.pack()
 
- def getManualButton(self):
-  getManualButton=Button(self.root,text="Get Manual Annotations",bg="red",command=self.getManual)
+ def getManualButton(self,root):
+  getManualButton=Button(root,text="Get Manual Annotations",bg="red",command=self.getManual)
   getManualButton.pack()
 
- def Dictionary(self):
-  self.filename1 = filedialog.askopenfilename(initialdir = "/home/"+getpass.getuser()+"/TextMiner/Data",title = "Choose your file",filetypes = (("Text files","*.txt"),))
-  self.name1=(self.filename1.split('/')[-1]).split('.')[0]
-  with open(self.filename1) as fp:
-    for line in fp:
-      line = line.strip('\n')
-      print(line)
- def highlightDictionary(self,widget):
-  print("Sravan is a good boy")
-  with open(self.filename1) as fp:
-    for line in fp:
-      line = line.strip('\n')
-      self.highlightGreen(line,widget)
+
+ def dictionaryButton(self,root):
+  dictionaryButton = Button(root,text="Give Dictionary",bg="red",command=self.dictionary)
+  dictionaryButton.pack()
+
+ def browse(self,root):
+
+  filename = filedialog.askopenfilename(initialdir = "/home/"+getpass.getuser()+"/TextMiner/Data",title = "Choose your file",filetypes = (("Text files","*.txt"),))
+  self.name=(filename.split('/')[-1]).split('.')[0]
+  self.docview(filename,root)
 
 
-
-
- def browse(self):
-
-  self.filename = filedialog.askopenfilename(initialdir = "/home/"+getpass.getuser()+"/TextMiner/Data",title = "Choose your file",filetypes = (("Text files","*.txt"),))
-  self.name=(self.filename.split('/')[-1]).split('.')[0]
-  self.docview()
-
-
- def docview(self):
-  self.root=Tk()
-  #docview.tk.call('wm','iconphoto',docview._w,self.icon)
-  #self.icon = tkinter.Image("photo", file="/home/sravan/TextMiner/Data/icon.png")
-  #self.root.tk.call('wm','iconbitmap',self.root._w,self.icon)
-  #self.root.iconbitmap(r'/home/sravan/TextMiner/Data/images.jpg')
-  docview = self.root
+ def docview(self,filename,root):
+  docview = Tk()
   docview.title("Document: "+self.name)
-  f=open(self.filename,"r+")
+  f=open(filename,"r+")
   data = f.read()
   self.myText=data
   S = Scrollbar(docview)
-  T = Text(docview,height=20)
+  docWidget = Text(docview,height=20)
   S.pack(side=RIGHT,fill=Y)
-  T.pack(expand = 1, fill= BOTH)
-  S.config(command=T.yview)
-  T.config(yscrollcommand=S.set)
-  T.insert(END,data)
-  T.config(state=DISABLED)
-  getPersonButton=Button(self.root,text="Get Person Annotated",bg="red",command=partial(self.getPerson,T))
+  docWidget.pack(expand = 1, fill= BOTH)
+  S.config(command=docWidget.yview)
+  docWidget.config(yscrollcommand=S.set)
+  docWidget.insert(END,data)
+  docWidget.config(state=DISABLED)
+  getPersonButton=Button(docview,text="Get Person Annotated",bg="red",command=partial(self.getPerson,docWidget))
   getPersonButton.pack(side=LEFT)
-  HighlighDictionaryButton =Button(self.root,text="Highlight Dictionary",bg="red",command=partial(self.highlightDictionary,T))
-  HighlighDictionaryButton.pack(side=RIGHT)
+  highlighDictionaryButton =Button(docview,text="Highlight Dictionary",bg="red",command=partial(self.highlightDictionary,docWidget))
+  highlighDictionaryButton.pack(side=RIGHT)
   docview.mainloop()
 
 
@@ -133,10 +113,24 @@ class gui:
   db.commit()
 
  
- def namedEntity(self):  #ne.tk.call('wm','iconphoto',ne._w,self.icon)
-  if hasattr(self, 'filename'):
-    ne=Tk()
+ def dictionary(self):
+  self.dicfileName = filedialog.askopenfilename(initialdir = "/home/"+getpass.getuser()+"/TextMiner/Data",title = "Choose your file",filetypes = (("Text files","*.txt"),))
+  self.dicName=(self.dicfileName.split('/')[-1]).split('.')[0]
+  with open(self.dicfileName) as fp:
+    for line in fp:
+      line = line.strip('\n')
+      print(line)
 
+ def highlightDictionary(self,widget):
+  with open(self.dicfileName) as fp:
+    for line in fp:
+      line = line.strip('\n')
+      self.highlightGreen(line,widget)
+
+
+ def namedEntity(self):  #ne.tk.call('wm','iconphoto',ne._w,self.icon)
+  if hasattr(self, 'name'):
+    ne=Tk()
     ne.title("Named-Entity List: "+self.name)
     neWidget=Text(ne)
     ne_array=namedEntity.namedEntity(self.myText)
@@ -160,7 +154,7 @@ class gui:
  
  def partofSpeech(self):
   #pos.tk.call('wm','iconphoto',pos._w,self.icon)
-  if hasattr(self,'filename'):
+  if hasattr(self,'name'):
     pos=Tk()
     pos.title("POS Tagged List: "+self.name)
     posWidget=Text(pos)
@@ -186,7 +180,7 @@ class gui:
 
  def sentTokenize(self):
   #st.tk.call('wm','iconphoto',st._w,self.icon)
-  if hasattr(self,'filename'):
+  if hasattr(self,'name'):
     st=Tk()
     st.title("Tokenized Sentences List: "+self.name)
     stWidget=Text(st)
@@ -207,6 +201,8 @@ class gui:
   else:
     content = "Please Select a File"
     messagebox.showinfo("Error! Oops",content)
+
+
  def highlightGreen(self,text,widget):
   try:
     search = " " + text + " "
@@ -228,6 +224,7 @@ class gui:
   except:
     content = "Please Enter a text in highlight box"
     messagebox.showinfo("Error! Oops",content)
+
 
  def highlight1(self,text,widget):
   try:
@@ -255,7 +252,7 @@ class gui:
 
  def wordTokenize(self):
   #wt.tk.call('wm','iconphoto',wt._w,self.icon)
-  if hasattr(self,'filename'):
+  if hasattr(self,'name'):
     wt=Tk()
     wt.title("Tokenized Words List: "+self.name)
     wtWidget=Text(wt)
@@ -279,7 +276,7 @@ class gui:
 
 
  def manual(self):
-  if hasattr(self,'filename'):
+  if hasattr(self,'name'):
     manual=Tk()
     manual.title("Manually Annotate: "+self.name)
     manualWidget=Text(manual)
@@ -310,6 +307,7 @@ class gui:
  def getText(self,manualWidget):
   text=self.entry_3.get()
   self.highlight(text,manualWidget)
+
 
  def highlight(self,text,widget):
 
@@ -359,7 +357,7 @@ class gui:
   self.manual.destroy()
     
  def getManual(self):
-  if hasattr(self,'filename'):
+  if hasattr(self,'name'):
     manualAnnot=Tk()
     manualAnnot.title("Manual Annotate: "+self.name)
     manualFile=open(self.name + "_manualAnnot.txt","r+")
@@ -371,23 +369,6 @@ class gui:
   else:
     content = "Please Select a File"
     messagebox.showinfo("Error! Oops",content)
-
- """def getfromDict(self):
-  self.dic=Tk()
-  self.dic.title("Dictionary Highlight: "+self.name)
-  self.dicWidget=Text(self.dic)
-  self.dicWidget.insert(0.0,self.myText)
-  self.manualWidget.pack(expand = 1, fill= BOTH)
-  browseDicButton = Button(self.dic,text="Browse Dictionary",bg="red",command=self.browsedic)
-  browseDicButton.pack()
-  highlightdic=Button(self.manual,text="HIGHLIGHT",bg="red",command=self.highlightdic)
-  highlightdic.pack()
-   
- def browsedic(self):
-  self.dictname = filedialog.askopenfilename(initialdir = "/home/"+getpass.getuser()+"/TextMiner/Data",title = "Choose your file",filetypes = (("Text files","*.txt"),))
-"""
-    
-
 
 
 
