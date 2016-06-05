@@ -109,7 +109,7 @@ class gui:
   results = cursor.fetchall()
   for row in results:
     name = row[0]
-    self.highlight1(name,widget)
+    self.highlight(name,widget,"yellow",1)
   db.commit()
 
  
@@ -125,10 +125,10 @@ class gui:
   with open(self.dicfileName) as fp:
     for line in fp:
       line = line.strip('\n')
-      self.highlightGreen(line,widget)
+      self.highlight(line,widget,"green",1)
 
 
- def namedEntity(self):  #ne.tk.call('wm','iconphoto',ne._w,self.icon)
+ def namedEntity(self):  
   if hasattr(self, 'name'):
     ne=Tk()
     ne.title("Named-Entity List: "+self.name)
@@ -153,7 +153,6 @@ class gui:
 
  
  def partofSpeech(self):
-  #pos.tk.call('wm','iconphoto',pos._w,self.icon)
   if hasattr(self,'name'):
     pos=Tk()
     pos.title("POS Tagged List: "+self.name)
@@ -179,7 +178,6 @@ class gui:
  
 
  def sentTokenize(self):
-  #st.tk.call('wm','iconphoto',st._w,self.icon)
   if hasattr(self,'name'):
     st=Tk()
     st.title("Tokenized Sentences List: "+self.name)
@@ -203,55 +201,7 @@ class gui:
     messagebox.showinfo("Error! Oops",content)
 
 
- def highlightGreen(self,text,widget):
-  try:
-    search = " " + text + " "
-    start=1.0
-    first=widget.search(search,1.0,stopindex=END)
-    widget.tag_configure("GREEN", background="green")
-    while first:
-     row,col=first.split('.')
-     col = int(col) + 1
-     first = row+'.'+str(col)
-     last=int(col)+len(search) - 2
-     last=row+'.'+str(last)
-     row,col=last.split('.') 
-     print(first)
-     print(last)
-     widget.tag_add("GREEN", first,last)
-     start=last
-     first=widget.search(search,start,stopindex=END)
-  except:
-    content = "Please Enter a text in highlight box"
-    messagebox.showinfo("Error! Oops",content)
-
-
- def highlight1(self,text,widget):
-  try:
-    search = " " + text + " "
-    start=1.0
-    first=widget.search(search,1.0,stopindex=END)
-    widget.tag_configure("YELLOW", background="yellow")
-    while first:
-     row,col=first.split('.')
-     col = int(col) + 1
-     first = row+'.'+str(col)
-     last=int(col)+len(search) - 2
-     last=row+'.'+str(last)
-     row,col=last.split('.') 
-     print(first)
-     print(last)
-     widget.tag_add("YELLOW", first,last)
-     start=last
-     first=widget.search(search,start,stopindex=END)
-  except:
-    content = "Please Enter a text in highlight box"
-    messagebox.showinfo("Error! Oops",content)
-
-
-
  def wordTokenize(self):
-  #wt.tk.call('wm','iconphoto',wt._w,self.icon)
   if hasattr(self,'name'):
     wt=Tk()
     wt.title("Tokenized Words List: "+self.name)
@@ -304,19 +254,21 @@ class gui:
     content = "Please Select a File"
     messagebox.showinfo("Error! Oops",content)
 
+
  def getText(self,manualWidget):
   text=self.entry_3.get()
-  self.highlight(text,manualWidget)
+  self.highlight(text,manualWidget,"yellow",0)
 
 
- def highlight(self,text,widget):
+ def highlight(self,text,widget,color,cond):
 
   try:
     search = " " + text + " "
     start=1.0
     first=widget.search(search,1.0,stopindex=END)
-    widget.tag_configure("YELLOW", background="yellow")
-    widget.tag_remove("YELLOW", 1.0, "end")
+    widget.tag_configure("COLOR", background=color)
+    if(cond==0):
+     widget.tag_remove("COLOR", 1.0, "end")
     while first:
      row,col=first.split('.')
      col = int(col) + 1
@@ -326,7 +278,7 @@ class gui:
      row,col=last.split('.') 
      print(first)
      print(last)
-     widget.tag_add("YELLOW", first,last)
+     widget.tag_add("COLOR", first,last)
      start=last
      first=widget.search(search,start,stopindex=END)
   except:
