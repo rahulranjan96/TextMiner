@@ -22,6 +22,9 @@ class gui:
  def maindisplay(self):
   root = Tk()
   root.minsize(250, 250)
+  var  = StringVar(root)
+  self.er = var
+  var.set("nltk")
   root.title("TextMiner")
   icon = tkinter.Image("photo", file="/home/"+getpass.getuser()+"/TextMiner/Data/icon.png")
   root.tk.call('wm','iconphoto',root._w,icon)
@@ -33,7 +36,13 @@ class gui:
   self.manualButton(root)
   self.getManualButton(root)
   self.dictionaryButton(root)
+  option = OptionMenu(root, var, "nltk","polyglot")
+  option.pack()
+  self.getLibraryButton(root)
   root.mainloop()
+ def getLibraryButton(self,root):
+  okbutton = Button(root,text="ok",bg="yellow",command=self.ok)
+  okbutton.pack()
  
 
  def browseButton(self,root):
@@ -78,6 +87,18 @@ class gui:
   filename = filedialog.askopenfilename(initialdir = "/home/"+getpass.getuser()+"/TextMiner/Data",title = "Choose your file",filetypes = (("Text files","*.txt"),))
   self.name=(filename.split('/')[-1]).split('.')[0]
   self.docview(filename,root)
+ def ok(self):
+  vare = self.er
+  a = vare.get()
+  if(a=="nltk"):
+    print(a)
+    self.value=0
+  elif(a=="polyglot"):
+    print(a)
+    self.value=1
+  else:
+    print("sravn")
+  print(self.value)
 
 
  def docview(self,filename,root):
@@ -122,10 +143,15 @@ class gui:
       print(line)
 
  def highlightDictionary(self,widget):
-  with open(self.dicfileName) as fp:
-    for line in fp:
-      line = line.strip('\n')
-      self.highlight(line,widget,"green",1)
+  if hasattr(self, "dicfileName"):
+    with open(self.dicfileName) as fp:
+      for line in fp:
+        line = line.strip('\n')
+        self.highlight(line,widget,"green",1)
+  else:
+    content = "Please Select a File"
+    messagebox.showinfo("Error! Oops",content)
+
 
 
  def namedEntity(self):  
