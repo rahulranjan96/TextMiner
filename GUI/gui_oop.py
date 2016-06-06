@@ -40,6 +40,8 @@ class gui:
   option.pack()
   self.getLibraryButton(root)
   root.mainloop()
+
+
  def getLibraryButton(self,root):
   okbutton = Button(root,text="ok",bg="yellow",command=self.ok)
   okbutton.pack()
@@ -141,6 +143,7 @@ class gui:
     for line in fp:
       line = line.strip('\n')
       print(line)
+
 
  def highlightDictionary(self,widget):
   if hasattr(self, "dicfileName"):
@@ -286,7 +289,7 @@ class gui:
   self.highlight(text,manualWidget,"yellow",0)
 
 
- def highlight(self,text,widget,color,cond):
+ def highlight(self,text,widget,color,cond): #pass cond=1 if you want to recursively highlight a set of words from the text,else pass cond=0
 
   try:
     search = " " + text + " "
