@@ -6,6 +6,7 @@ import getpass
 from tkinter import messagebox
 sys.path.insert(0,'/home/'+getpass.getuser()+'/TextMiner/Processor')
 import namedEntity
+import polyglotSent
 import partofSpeech
 import sentTokenize
 import wordTokenize
@@ -61,7 +62,7 @@ class gui:
  
 
  def stButton(self,root):
-  stButton=Button(root,text="Sent. Tokenize",bg="red",command=self.sentTokenize)
+  stButton=Button(root,text="Sent. Tokenize",bg="red",command=self.sentTokenizechecker)
   stButton.pack()
  
 
@@ -81,6 +82,34 @@ class gui:
  def dictionaryButton(self,root):
   dictionaryButton = Button(root,text="Give Dictionary",bg="red",command=self.dictionary)
   dictionaryButton.pack()
+ def sentTokenizechecker(self):
+  if hasattr(self, "value"):
+    if(self.value==0):
+      self.sentTokenize()
+      print("nltk")
+    else:
+      print("POlyglot")
+      self.sentTokenizePolyglot()
+  else:
+    self.sentTokenize()
+ def sentTokenizePolyglot(self):
+  polyglotsent = Tk()
+  data = self.myText
+  sent_array = polyglotSent.polySentTokenize(data)
+  string=""
+  for i in sent_array:
+    string = string + str(i) + "\n"
+  data = string
+  S = Scrollbar(polyglotsent)
+  T = Text(polyglotsent,height=20)
+  S.pack(side=RIGHT,fill=Y)
+  T.pack(expand = 1, fill= BOTH)
+  S.config(command=T.yview)
+  T.config(yscrollcommand=S.set)
+  T.insert(END,data)
+  T.config(state=DISABLED)
+  polyglotsent.mainloop()
+
 
  def browse(self,root):
 
