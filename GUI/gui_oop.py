@@ -85,17 +85,23 @@ class gui:
   dictionaryButton = Button(root,text="Give Dictionary",bg="red",command=self.dictionary)
   dictionaryButton.pack()
  def sentTokenizechecker(self):
-  if hasattr(self, "value"):
-    if(self.value==0):
-      self.sentTokenize()
-      print("nltk")
+  if hasattr(self, "name"):
+    if hasattr(self, "value"):
+      if(self.value==0):
+       self.sentTokenize()
+       print("nltk")
+      else:
+        print("POlyglot")
+        self.sentTokenizePolyglot()
     else:
-      print("POlyglot")
-      self.sentTokenizePolyglot()
+     self.sentTokenize()
   else:
-    self.sentTokenize()
+    content = "Please Select a File"
+    messagebox.showinfo("Error! Oops",content)
+
  def sentTokenizePolyglot(self):
   polyglotsent = Tk()
+  polyglotsent.title("Tokenized Sentences List with PolyGlot: "+self.name)
   data = self.myText
   sent_array = polyglotSent.polySentTokenize(data)
   string=""
