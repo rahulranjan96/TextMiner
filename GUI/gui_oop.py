@@ -6,12 +6,12 @@ import getpass
 import socket
 from tkinter import messagebox
 sys.path.insert(0,'/home/'+getpass.getuser()+'/TextMiner/Processor')
-import namedEntity
+import nltknamedEntity
+import nltkpartofSpeech
+import nltksentTokenize
+import nltkwordTokenize
 import polyglotName
 import polyglotSent
-import partofSpeech
-import sentTokenize
-import wordTokenize
 import polyglotWord
 import polyglotSpeech
 import MySQLdb
@@ -88,19 +88,36 @@ class gui:
  def dictionaryButton(self,root):
   dictionaryButton = Button(root,text="Give Dictionary",bg="red",command=self.dictionary)
   dictionaryButton.pack()
+
+
+
+ def sentTokenizechecker(self):
+  if hasattr(self, "name"):
+    if hasattr(self, "value"):
+      if(self.value==0):
+       self.sentTokenizeNLTK()
+       print("nltk")
+      else:
+        print("POlyglot")
+        self.sentTokenizePolyglot()
+    else:
+     self.sentTokenizeNLTK()
+  else:
+    content = "Please Select a File"
+    messagebox.showinfo("Error! Oops",content)
  
 
  def wordTokenizechecker(self):
   if hasattr(self,"name"):
     if hasattr(self,"value"):
       if(self.value==0):
-        self.wordTokenize()
+        self.wordTokenizeNLTK()
         print("nltk")
       else:
         print("Polyglot")
         self.wordTokenizePolyglot()
     else:
-      self.wordTokenize()
+      self.wordTokenizeNLTK()
   else:
     content = "Please select a  file"
     messagebox.showinfo("Error! Ooops",content)
@@ -110,13 +127,13 @@ class gui:
   if hasattr(self,"name"):
     if hasattr(self,"value"):
       if(self.value==0):
-        self.partofSpeech()
+        self.partofSpeechNLTK()
         print("nltk")
       else:
         print("polyglot")
         self.partofSpeechPolyglot()
     else:
-      self.partofSpeech()
+      self.partofSpeechNLTK()
   else:
     content = "Please select a file"
     messagebox.showinfo("Error Oops",content)
@@ -126,35 +143,139 @@ class gui:
   if hasattr(self,"name"):
     if hasattr(self,"value"):
       if(self.value==0):
-        self.namedEntity()
+        self.namedEntityNLTK()
         print("nltk")
       else:
         print("polyglot")
         self.namedEntityPolyglot()
     else:
-      self.namedEntity()
+      self.namedEntityNLTK()
   else:
     content = "Please select a file"
     messagebox.showinfo("Error! Ooops",content)
 
- def sentTokenizechecker(self):
-  if hasattr(self, "name"):
-    if hasattr(self, "value"):
-      if(self.value==0):
-       self.sentTokenize()
-       print("nltk")
-      else:
-        print("POlyglot")
-        self.sentTokenizePolyglot()
-    else:
-     self.sentTokenize()
+
+
+ def sentTokenizeNLTK(self):
+  if hasattr(self,'name'):
+    st=Tk()
+    st.title("Tokenized Sentences List with NLTK: "+self.name)
+    stWidget=Text(st)
+    st_array=nltksentTokenize.nltksentTokenize(self.myText)
+    string = ""
+    for i in st_array:
+      string = string + i + "\n"
+    data = string  
+    S = Scrollbar(st)
+    T = Text(st,height=20)
+    S.pack(side=RIGHT,fill=Y)
+    T.pack(expand = 1, fill= BOTH)
+    S.config(command=T.yview)
+    T.config(yscrollcommand=S.set)
+    T.insert(END,data)
+    T.config(state=DISABLED)
+    st.mainloop()
   else:
     content = "Please Select a File"
     messagebox.showinfo("Error! Oops",content)
 
+
+ def wordTokenizeNLTK(self):
+  if hasattr(self,'name'):
+    wt=Tk()
+    wt.title("Tokenized Words List with NLTK:: "+self.name)
+    wtWidget=Text(wt)
+    wt_array=nltkwordTokenize.nltkwordTokenize(self.myText)
+    string = ""
+    for i in wt_array:
+      string = string + i + "\n"
+    data = string  
+    S = Scrollbar(wt)
+    T = Text(wt,height=20)
+    S.pack(side=RIGHT,fill=Y)
+    T.pack(expand = 1, fill= BOTH)
+    S.config(command=T.yview)
+    T.config(yscrollcommand=S.set)
+    T.insert(END,data)
+    T.config(state=DISABLED)      
+    wt.mainloop()
+  else:
+    content = "Please Select a File"
+    messagebox.showinfo("Error! Oops",content)
+
+ def partofSpeechNLTK(self):
+  if hasattr(self,'name'):
+    pos=Tk()
+    pos.title("Part of Speech tagging with NLTK: "+self.name)
+    posWidget=Text(pos)
+    pos_array=nltkpartofSpeech.nltkpartofSpeech(self.myText)
+    string = ""
+    for i in pos_array:
+      string = string + i + "\n"
+    data = string  
+    S = Scrollbar(pos)
+    T = Text(pos,height=20)
+    S.pack(side=RIGHT,fill=Y)
+    T.pack(expand = 1, fill= BOTH)
+    S.config(command=T.yview)
+    T.config(yscrollcommand=S.set)
+    T.insert(END,data)
+    T.config(state=DISABLED)
+    pos.mainloop()
+  else:
+    content = "Please Select a File"
+    messagebox.showinfo("Error! Oops",content)
+
+
+
+ def namedEntityNLTK(self):  
+  if hasattr(self, 'name'):
+    ne=Tk()
+    ne.title("Word Tokenization with NLTK: "+self.name)
+    neWidget=Text(ne)
+    ne_array=nltknamedEntity.nltknamedEntity(self.myText)
+    string=""
+    for i in ne_array:
+     string = string + i + "\n"
+    data = string
+    S = Scrollbar(ne)
+    T = Text(ne,height=20)
+    S.pack(side=RIGHT,fill=Y)
+    T.pack(expand = 1, fill= BOTH)
+    S.config(command=T.yview)
+    T.config(yscrollcommand=S.set)
+    T.insert(END,data)
+    T.config(state=DISABLED)
+    ne.mainloop()
+  else:
+    content = "Please Select a File"
+    messagebox.showinfo("Error! Oops",content)
+
+ 
+
+ def sentTokenizePolyglot(self):
+  polyglotsent = Tk()
+  polyglotsent.title("Tokenized Sentences List with PolyGlot : "+self.name)
+  data = self.myText
+  sent_array = polyglotSent.polySentTokenize(data)
+  string=""
+  for i in sent_array:
+    string = string + str(i) + "\n"
+  data = string
+  S = Scrollbar(polyglotsent)
+  T = Text(polyglotsent,height=20)
+  S.pack(side=RIGHT,fill=Y)
+  T.pack(expand = 1, fill= BOTH)
+  S.config(command=T.yview)
+  T.config(yscrollcommand=S.set)
+  T.insert(END,data)
+  T.config(state=DISABLED)
+  polyglotsent.mainloop()
+
+
  def wordTokenizePolyglot(self):
   polyglotWordWin = Tk()
-  polyglotWordWin.title("Word Tokenization with Polyglot:"+self.name)
+  polyglotWordWin.title("Word Tokenization with Polyglot: "+self.name)
   data = self.myText
   word_array = polyglotWord.polyWordTokenize(data)
   string=""
@@ -173,7 +294,7 @@ class gui:
 
  def partofSpeechPolyglot(self):
   polySpeechWin = Tk()
-  polySpeechWin.title("Part of Speech Tagging :"+self.name)
+  polySpeechWin.title("Part of Speech Tagging with Polyglot :"+self.name)
   data = self.myText
   speech_array = polyglotSpeech.polySpeechTokenize(data)
   count = 1
@@ -195,10 +316,11 @@ class gui:
   T.insert(END,data)
   T.config(state=DISABLED)
   polySpeechWin.mainloop()
+
  def namedEntityPolyglot(self):
   #polyglotName = Tk()
   polyglotNameWin = Tk()
-  polyglotNameWin.title("Named Entity Recognition with  PolyGlot: "+self.name)
+  polyglotNameWin.title("Named Entity Recognition with PolyGlot : "+self.name)
   data = self.myText
   name_array = polyglotName.polyNameTokenize(data)
   #name_array = polyglotName.polyNameTokenize(data)
@@ -219,7 +341,7 @@ class gui:
       string = string +  i[1] + ":"
       var = 0
    else:
-      string = string + i + "\t"
+      string = string + i + " "
   print(string)
   data = string
   S = Scrollbar(polyglotNameWin)
@@ -231,26 +353,6 @@ class gui:
   T.insert(END,data)
   T.config(state=DISABLED)
   polyglotNameWin.mainloop()
-
-
- def sentTokenizePolyglot(self):
-  polyglotsent = Tk()
-  polyglotsent.title("Tokenized Sentences List with PolyGlot: "+self.name)
-  data = self.myText
-  sent_array = polyglotSent.polySentTokenize(data)
-  string=""
-  for i in sent_array:
-    string = string + str(i) + "\n"
-  data = string
-  S = Scrollbar(polyglotsent)
-  T = Text(polyglotsent,height=20)
-  S.pack(side=RIGHT,fill=Y)
-  T.pack(expand = 1, fill= BOTH)
-  S.config(command=T.yview)
-  T.config(yscrollcommand=S.set)
-  T.insert(END,data)
-  T.config(state=DISABLED)
-  polyglotsent.mainloop()
 
 
  def browse(self,root):
@@ -326,106 +428,8 @@ class gui:
   else:
     content = "Please Select a File"
     messagebox.showinfo("Error! Oops",content)
-
-
-
- def namedEntity(self):  
-  if hasattr(self, 'name'):
-    ne=Tk()
-    ne.title("Named-Entity List: "+self.name)
-    neWidget=Text(ne)
-    ne_array=namedEntity.namedEntity(self.myText)
-    string=""
-    for i in ne_array:
-     string = string + i + "\n"
-    data = string
-    S = Scrollbar(ne)
-    T = Text(ne,height=20)
-    S.pack(side=RIGHT,fill=Y)
-    T.pack(expand = 1, fill= BOTH)
-    S.config(command=T.yview)
-    T.config(yscrollcommand=S.set)
-    T.insert(END,data)
-    T.config(state=DISABLED)
-    ne.mainloop()
-  else:
-    content = "Please Select a File"
-    messagebox.showinfo("Error! Oops",content)
-
  
- def partofSpeech(self):
-  if hasattr(self,'name'):
-    pos=Tk()
-    pos.title("POS Tagged List: "+self.name)
-    posWidget=Text(pos)
-    pos_array=partofSpeech.partofSpeech(self.myText)
-    string = ""
-    for i in pos_array:
-      string = string + i + "\n"
-    data = string  
-    S = Scrollbar(pos)
-    T = Text(pos,height=20)
-    S.pack(side=RIGHT,fill=Y)
-    T.pack(expand = 1, fill= BOTH)
-    S.config(command=T.yview)
-    T.config(yscrollcommand=S.set)
-    T.insert(END,data)
-    T.config(state=DISABLED)
-    pos.mainloop()
-  else:
-    content = "Please Select a File"
-    messagebox.showinfo("Error! Oops",content)
-
  
-
- def sentTokenize(self):
-  if hasattr(self,'name'):
-    st=Tk()
-    st.title("Tokenized Sentences List: "+self.name)
-    stWidget=Text(st)
-    st_array=sentTokenize.sentTokenize(self.myText)
-    string = ""
-    for i in st_array:
-      string = string + i + "\n"
-    data = string  
-    S = Scrollbar(st)
-    T = Text(st,height=20)
-    S.pack(side=RIGHT,fill=Y)
-    T.pack(expand = 1, fill= BOTH)
-    S.config(command=T.yview)
-    T.config(yscrollcommand=S.set)
-    T.insert(END,data)
-    T.config(state=DISABLED)
-    st.mainloop()
-  else:
-    content = "Please Select a File"
-    messagebox.showinfo("Error! Oops",content)
-
-
- def wordTokenize(self):
-  if hasattr(self,'name'):
-    wt=Tk()
-    wt.title("Tokenized Words List: "+self.name)
-    wtWidget=Text(wt)
-    wt_array=wordTokenize.wordTokenize(self.myText)
-    string = ""
-    for i in wt_array:
-      string = string + i + "\n"
-    data = string  
-    S = Scrollbar(wt)
-    T = Text(wt,height=20)
-    S.pack(side=RIGHT,fill=Y)
-    T.pack(expand = 1, fill= BOTH)
-    S.config(command=T.yview)
-    T.config(yscrollcommand=S.set)
-    T.insert(END,data)
-    T.config(state=DISABLED)      
-    wt.mainloop()
-  else:
-    content = "Please Select a File"
-    messagebox.showinfo("Error! Oops",content)
-
-
  def manual(self):
   if hasattr(self,'name'):
     manual=Tk()

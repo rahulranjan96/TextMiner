@@ -1,6 +1,6 @@
 import nltk
 
-def partofSpeech(text):
+def nltkpartofSpeech(text):
  pos_array=set()
  for sent in nltk.sent_tokenize(text):
   for chunk in nltk.ne_chunk(nltk.pos_tag(nltk.word_tokenize(sent))):
