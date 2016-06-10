@@ -31,8 +31,7 @@ class gui:
   self.er = var
   var.set("nltk")
   root.title("TextMiner")
-  icon = tkinter.Image("photo", file="/home/"+getpass.getuser()+"/TextMiner/Data/icon.png")
-  root.tk.call('wm','iconphoto',root._w,icon)
+  self.icon(root)
   self.browseButton(root)
   self.neButton(root)
   self.posButton(root)
@@ -158,8 +157,9 @@ class gui:
 
  def sentTokenizeNLTK(self):
   if hasattr(self,'name'):
-    st=Tk()
+    st=Toplevel() 
     st.title("Tokenized Sentences List with NLTK: "+self.name)
+    self.icon(st)
     stWidget=Text(st)
     st_array=nltksentTokenize.nltksentTokenize(self.myText)
     string = ""
@@ -174,7 +174,7 @@ class gui:
     T.config(yscrollcommand=S.set)
     T.insert(END,data)
     T.config(state=DISABLED)
-    st.mainloop()
+    #st.mainloop()
   else:
     content = "Please Select a File"
     messagebox.showinfo("Error! Oops",content)
@@ -182,8 +182,9 @@ class gui:
 
  def wordTokenizeNLTK(self):
   if hasattr(self,'name'):
-    wt=Tk()
+    wt=Toplevel() 
     wt.title("Tokenized Words List with NLTK:: "+self.name)
+    self.icon(wt)
     wtWidget=Text(wt)
     wt_array=nltkwordTokenize.nltkwordTokenize(self.myText)
     string = ""
@@ -198,15 +199,16 @@ class gui:
     T.config(yscrollcommand=S.set)
     T.insert(END,data)
     T.config(state=DISABLED)      
-    wt.mainloop()
+    #wt.mainloop()
   else:
     content = "Please Select a File"
     messagebox.showinfo("Error! Oops",content)
 
  def partofSpeechNLTK(self):
   if hasattr(self,'name'):
-    pos=Tk()
+    pos=Toplevel() 
     pos.title("Part of Speech tagging with NLTK: "+self.name)
+    self.icon(pos)
     posWidget=Text(pos)
     pos_array=nltkpartofSpeech.nltkpartofSpeech(self.myText)
     string = ""
@@ -221,7 +223,7 @@ class gui:
     T.config(yscrollcommand=S.set)
     T.insert(END,data)
     T.config(state=DISABLED)
-    pos.mainloop()
+    #pos.mainloop()
   else:
     content = "Please Select a File"
     messagebox.showinfo("Error! Oops",content)
@@ -230,8 +232,9 @@ class gui:
 
  def namedEntityNLTK(self):  
   if hasattr(self, 'name'):
-    ne=Tk()
+    ne=Toplevel() 
     ne.title("Word Tokenization with NLTK: "+self.name)
+    self.icon(ne)
     neWidget=Text(ne)
     ne_array=nltknamedEntity.nltknamedEntity(self.myText)
     string=""
@@ -246,7 +249,7 @@ class gui:
     T.config(yscrollcommand=S.set)
     T.insert(END,data)
     T.config(state=DISABLED)
-    ne.mainloop()
+    #ne.mainloop()
   else:
     content = "Please Select a File"
     messagebox.showinfo("Error! Oops",content)
@@ -254,8 +257,9 @@ class gui:
  
 
  def sentTokenizePolyglot(self):
-  polyglotsent = Tk()
+  polyglotsent = Toplevel() 
   polyglotsent.title("Tokenized Sentences List with PolyGlot : "+self.name)
+  self.icon(polyglotsent)
   data = self.myText
   sent_array = polyglotSent.polySentTokenize(data)
   string=""
@@ -270,12 +274,13 @@ class gui:
   T.config(yscrollcommand=S.set)
   T.insert(END,data)
   T.config(state=DISABLED)
-  polyglotsent.mainloop()
+  #polyglotsent.mainloop()
 
 
  def wordTokenizePolyglot(self):
-  polyglotWordWin = Tk()
+  polyglotWordWin = Toplevel() 
   polyglotWordWin.title("Word Tokenization with Polyglot: "+self.name)
+  self.icon(polyglotWordWin)
   data = self.myText
   word_array = polyglotWord.polyWordTokenize(data)
   string=""
@@ -290,11 +295,12 @@ class gui:
   T.config(yscrollcommand=S.set)
   T.insert(END,data)
   T.config(state=DISABLED)
-  polyglotWordWin.mainloop()
+  #polyglotWordWin.mainloop()
 
  def partofSpeechPolyglot(self):
-  polySpeechWin = Tk()
+  polySpeechWin = Toplevel() 
   polySpeechWin.title("Part of Speech Tagging with Polyglot :"+self.name)
+  self.icon(polySpeechWin)
   data = self.myText
   speech_array = polyglotSpeech.polySpeechTokenize(data)
   count = 1
@@ -315,12 +321,13 @@ class gui:
   T.config(yscrollcommand=S.set)
   T.insert(END,data)
   T.config(state=DISABLED)
-  polySpeechWin.mainloop()
+  #polySpeechWin.mainloop()
 
  def namedEntityPolyglot(self):
   #polyglotName = Tk()
-  polyglotNameWin = Tk()
+  polyglotNameWin = Toplevel() 
   polyglotNameWin.title("Named Entity Recognition with PolyGlot : "+self.name)
+  self.icon(polyglotNameWin)
   data = self.myText
   name_array = polyglotName.polyNameTokenize(data)
   #name_array = polyglotName.polyNameTokenize(data)
@@ -352,7 +359,7 @@ class gui:
   T.config(yscrollcommand=S.set)
   T.insert(END,data)
   T.config(state=DISABLED)
-  polyglotNameWin.mainloop()
+  #polyglotNameWin.mainloop()
 
 
  def browse(self,root):
@@ -375,8 +382,9 @@ class gui:
 
 
  def docview(self,filename,root):
-  docview = Tk()
+  docview = Toplevel() 
   docview.title("Document: "+self.name)
+  self.icon(docview)
   f=open(filename,"r+")
   data = f.read()
   self.myText=data
@@ -392,7 +400,7 @@ class gui:
   getPersonButton.pack(side=LEFT)
   highlighDictionaryButton =Button(docview,text="Highlight Dictionary",bg="red",command=partial(self.highlightDictionary,docWidget))
   highlighDictionaryButton.pack(side=RIGHT)
-  docview.mainloop()
+  #docview.mainloop()
 
 
  def getPerson(self,widget):
@@ -432,8 +440,9 @@ class gui:
  
  def manual(self):
   if hasattr(self,'name'):
-    manual=Tk()
+    manual=Toplevel() 
     manual.title("Manually Annotate: "+self.name)
+    self.icon(manual)
     manualWidget=Text(manual)
     manualWidget.insert(0.0,self.myText)
     manualWidget.pack(expand = 1, fill= BOTH)
@@ -454,7 +463,7 @@ class gui:
     done.pack()
     highlight=Button(manual,text="HIGHLIGHT",bg="red",command=partial(self.getText,manualWidget))
     highlight.pack()
-    manual.mainloop()
+    #manual.mainloop()
   else:
     content = "Please Select a File"
     messagebox.showinfo("Error! Oops",content)
@@ -515,17 +524,22 @@ class gui:
     
  def getManual(self):
   if hasattr(self,'name'):
-    manualAnnot=Tk()
+    manualAnnot=Toplevel() 
     manualAnnot.title("Manual Annotate: "+self.name)
+    self.icon(manualAnnot)
     manualFile=open(self.name + "_manualAnnot.txt","r+")
     manualText=manualFile.read()
     manualAnnotWidget=Text(manualAnnot)
     manualAnnotWidget.insert(0.0,manualText)
     manualAnnotWidget.pack(expand = 1, fill= BOTH)
-    manualAnnot.mainloop()
+    #manualAnnot.mainloop()
   else:
     content = "Please Select a File"
     messagebox.showinfo("Error! Oops",content)
+
+ def icon(self,window):
+  icon = tkinter.Image("photo", file="/home/"+getpass.getuser()+"/TextMiner/Data/icon.png")
+  window.tk.call('wm','iconphoto',window._w,icon)
 
 
 
