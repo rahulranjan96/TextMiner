@@ -16,7 +16,8 @@ import polyglotWord
 import polyglotSpeech
 import MySQLdb
 from functools import partial
-from PIL import Image, ImageTk
+from PIL import ImageTk
+from PIL import Image
 
 
 
