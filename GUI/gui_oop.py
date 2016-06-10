@@ -16,6 +16,7 @@ import polyglotWord
 import polyglotSpeech
 import MySQLdb
 from functools import partial
+from PIL import Image, ImageTk
 
 class gui:
  
@@ -26,17 +27,21 @@ class gui:
 
  def maindisplay(self):
   root = Tk()
-  root.minsize(250, 250)
+  root.minsize(500, 300)
+  im = Image.open("/home/"+getpass.getuser()+"/TextMiner/Data/background.jpg")
+  tkimage = ImageTk.PhotoImage(im)
+  myvar=Label(root,image = tkimage)
+  myvar.place(x=0, y=0, relwidth=1.0, relheight=1.0)
   var  = StringVar(root)
   self.er = var
   var.set("nltk")
   root.title("TextMiner")
   self.icon(root)
   self.browseButton(root)
-  self.neButton(root)
-  self.posButton(root)
   self.stButton(root)
   self.wtButton(root)
+  self.posButton(root)
+  self.neButton(root)
   self.manualButton(root)
   self.getManualButton(root)
   self.dictionaryButton(root)
@@ -52,40 +57,40 @@ class gui:
  
 
  def browseButton(self,root):
-  browseButton = Button(root,text="Browse",bg="red",command=partial(self.browse,root))
+  browseButton = Button(root,text="Browse",width=20,bg="red",command=partial(self.browse,root))
   browseButton.pack()
  
 
  def neButton(self,root):
-  neButton=Button(root,text="NE Miner",bg="red",command=self.namedEntitychecker)
+  neButton=Button(root,text="Named Entity Recognizer",width=20,bg="red",command=self.namedEntitychecker)
   neButton.pack()
  
 
  def posButton(self,root):
-  posButton=Button(root,text="POS Tagger",bg="red",command=self.partofSpeechchecker)
+  posButton=Button(root,text="POS Tagger",width=20,bg="red",command=self.partofSpeechchecker)
   posButton.pack()
  
 
  def stButton(self,root):
-  stButton=Button(root,text="Sent. Tokenize",bg="red",command=self.sentTokenizechecker)
+  stButton=Button(root,text="Sentence Tokenizer",width=20,bg="red",command=self.sentTokenizechecker)
   stButton.pack()
  
 
  def wtButton(self,root):
-  wtButton=Button(root,text="Word Tokenize",bg="red",command=self.wordTokenizechecker)
+  wtButton=Button(root,text="Word Tokenizer",width=20,bg="red",command=self.wordTokenizechecker)
   wtButton.pack()
 
  def manualButton(self,root):
-  manualButton=Button(root,text="Manual Annotate",bg="red",command=self.manual)
+  manualButton=Button(root,text="Manually Annotate",width=20,bg="red",command=self.manual)
   manualButton.pack()
 
  def getManualButton(self,root):
-  getManualButton=Button(root,text="Get Manual Annotations",bg="red",command=self.getManual)
+  getManualButton=Button(root,text="Get Manual Annotations",width=20,bg="red",command=self.getManual)
   getManualButton.pack()
 
 
  def dictionaryButton(self,root):
-  dictionaryButton = Button(root,text="Give Dictionary",bg="red",command=self.dictionary)
+  dictionaryButton = Button(root,text="Give Dictionary",width=20,bg="red",command=self.dictionary)
   dictionaryButton.pack()
 
 
