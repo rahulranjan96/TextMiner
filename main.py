@@ -18,10 +18,16 @@ import MySQLdb
 from functools import partial
 from PIL import Image, ImageTk
 
+
+
+
+
 class gui:
+ 
  
 
  def __init__(self):
+  self.customFont = ('Times', 20, 'bold')
   self.maindisplay()
   
 
@@ -45,8 +51,9 @@ class gui:
   self.manualButton(root)
   self.getManualButton(root)
   self.dictionaryButton(root)
-  option = OptionMenu(root, var, "nltk","polyglot")
-  option.place(x = 500, y = 470)
+  option = OptionMenu(root, var, "NLTK","POLYGLOT")
+  option.config(width=8,height=2)
+  option.place(x = 450, y = 550)
   self.getLibraryButton(root)
   root.mainloop()
 
@@ -54,48 +61,48 @@ class gui:
  
 
  def browseButton(self,root):
-  browseButton = Button(root,text="Browse",width=20,bg="red",command=partial(self.browse,root))
-  browseButton.place(x = 450, y = 230)
+  browseButton = Button(root,text="Browse",width=20,bg="red",font=self.customFont,command=partial(self.browse,root))
+  browseButton.place(x = 400, y = 150)
 
  
  def stButton(self,root):
-  stButton=Button(root,text="Sentence Tokenizer",width=20,bg="red",command=self.sentTokenizechecker)
-  stButton.place(x = 450, y = 260)
+  stButton=Button(root,text="Sentence Tokenizer",width=20,bg="red",font=self.customFont,command=self.sentTokenizechecker)
+  stButton.place(x = 400, y = 200)
 
  
  def wtButton(self,root):
-  wtButton=Button(root,text="Word Tokenizer",width=20,bg="red",command=self.wordTokenizechecker)
-  wtButton.place(x = 450, y = 290)
+  wtButton=Button(root,text="Word Tokenizer",width=20,bg="red",font=self.customFont,command=self.wordTokenizechecker)
+  wtButton.place(x = 400, y = 250)
 
 
  def posButton(self,root):
-  posButton=Button(root,text="POS Tagger",width=20,bg="red",command=self.partofSpeechchecker)
-  posButton.place(x = 450, y = 320)
+  posButton=Button(root,text="POS Tagger",width=20,bg="red",font=self.customFont,command=self.partofSpeechchecker)
+  posButton.place(x = 400, y = 300)
 
 
  def neButton(self,root):
-  neButton=Button(root,text="Named Entity Recognizer",width=20,bg="red",command=self.namedEntitychecker)
-  neButton.place(x = 450, y = 350)
+  neButton=Button(root,text="Named Entity Recognizer",width=20,bg="red",font=self.customFont,command=self.namedEntitychecker)
+  neButton.place(x = 400, y = 350)
 
 
  def manualButton(self,root):
-  manualButton=Button(root,text="Manually Annotate",width=20,bg="red",command=self.manual)
-  manualButton.place(x = 450, y = 380)
+  manualButton=Button(root,text="Manually Annotate",width=20,bg="red",font=self.customFont,command=self.manual)
+  manualButton.place(x = 400, y = 400)
 
 
  def getManualButton(self,root):
-  getManualButton=Button(root,text="Get Manual Annotations",width=20,bg="red",command=self.getManual)
-  getManualButton.place(x = 450, y = 410)
+  getManualButton=Button(root,text="Get Manual Annotations",width=20,bg="red",font=self.customFont,command=self.getManual)
+  getManualButton.place(x = 400, y = 450)
 
 
  def dictionaryButton(self,root):
-  dictionaryButton = Button(root,text="Give Dictionary",width=20,bg="red",command=self.dictionary)
-  dictionaryButton.place(x = 450, y = 440)
+  dictionaryButton = Button(root,text="Give Dictionary",width=20,bg="red",font=self.customFont,command=self.dictionary)
+  dictionaryButton.place(x = 400, y = 500)
 
 
  def getLibraryButton(self,root):
-  okbutton = Button(root,text="ok",bg="yellow",command=self.ok)
-  okbutton.place(x = 500, y = 500)
+  okbutton = Button(root,text="OK",bg="blue",font=self.customFont,command=self.ok)
+  okbutton.place(x = 550, y = 550)
 
 
 
@@ -104,9 +111,9 @@ class gui:
     if hasattr(self, "value"):
       if(self.value==0):
        self.sentTokenizeNLTK()
-       print("nltk")
+       print("NLTK")
       else:
-        print("POlyglot")
+        print("POLYGLOT")
         self.sentTokenizePolyglot()
     else:
      self.sentTokenizeNLTK()
@@ -120,9 +127,9 @@ class gui:
     if hasattr(self,"value"):
       if(self.value==0):
         self.wordTokenizeNLTK()
-        print("nltk")
+        print("NLTK")
       else:
-        print("Polyglot")
+        print("POLYGLOT")
         self.wordTokenizePolyglot()
     else:
       self.wordTokenizeNLTK()
@@ -136,9 +143,9 @@ class gui:
     if hasattr(self,"value"):
       if(self.value==0):
         self.partofSpeechNLTK()
-        print("nltk")
+        print("NLTK")
       else:
-        print("polyglot")
+        print("POLYGLOT")
         self.partofSpeechPolyglot()
     else:
       self.partofSpeechNLTK()
@@ -152,9 +159,9 @@ class gui:
     if hasattr(self,"value"):
       if(self.value==0):
         self.namedEntityNLTK()
-        print("nltk")
+        print("NLTK")
       else:
-        print("polyglot")
+        print("POLYGLOT")
         self.namedEntityPolyglot()
     else:
       self.namedEntityNLTK()
@@ -376,17 +383,19 @@ class gui:
   filename = filedialog.askopenfilename(initialdir = "/home/"+getpass.getuser()+"/TextMiner/Data",title = "Choose your file",filetypes = (("Text files","*.txt"),))
   self.name=(filename.split('/')[-1]).split('.')[0]
   self.docview(filename,root)
+
+  
  def ok(self):
   vare = self.er
   a = vare.get()
-  if(a=="nltk"):
+  if(a=="NLTK"):
     print(a)
     self.value=0
-  elif(a=="polyglot"):
+  elif(a=="POLYGLOT"):
     print(a)
     self.value=1
   else:
-    print("sravn")
+    print("NLP")
   print(self.value)
 
 
