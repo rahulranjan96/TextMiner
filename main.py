@@ -220,6 +220,7 @@ class gui:
     content = "Please Select a File"
     messagebox.showinfo("Error! Oops",content)
 
+
  def partofSpeechNLTK(self):
   if hasattr(self,'name'):
     pos=Toplevel() 
@@ -313,6 +314,7 @@ class gui:
   T.config(state=DISABLED)
   #polyglotWordWin.mainloop()
 
+
  def partofSpeechPolyglot(self):
   polySpeechWin = Toplevel() 
   polySpeechWin.title("Part of Speech Tagging with Polyglot :"+self.name)
@@ -338,6 +340,7 @@ class gui:
   T.insert(END,data)
   T.config(state=DISABLED)
   #polySpeechWin.mainloop()
+
 
  def namedEntityPolyglot(self):
   #polyglotName = Tk()
@@ -379,12 +382,11 @@ class gui:
 
 
  def browse(self,root):
-
   filename = filedialog.askopenfilename(initialdir = "/home/"+getpass.getuser()+"/TextMiner/Data",title = "Choose your file",filetypes = (("Text files","*.txt"),))
   self.name=(filename.split('/')[-1]).split('.')[0]
   self.docview(filename,root)
 
-  
+
  def ok(self):
   vare = self.er
   a = vare.get()
@@ -493,7 +495,6 @@ class gui:
 
 
  def highlight(self,text,widget,color,cond): #pass cond=1 if you want to recursively highlight a set of words from the text,else pass cond=0
-
   try:
     search = " " + text + " "
     start=1.0
@@ -533,12 +534,14 @@ class gui:
   db.commit()
   self.manual_array.add(self.entry_1.get()+"~"+self.entry_2.get())
  
+ 
  def done(self):
   f = open(self.name + "_manualAnnot.txt","w")
   for i in self.manual_array:
    f.write(i)
    f.write("\n")
   self.manual.destroy()
+
     
  def getManual(self):
   if hasattr(self,'name'):
@@ -554,6 +557,7 @@ class gui:
   else:
     content = "Please Select a File"
     messagebox.showinfo("Error! Oops",content)
+    
 
  def icon(self,window):
   icon = tkinter.Image("photo", file="/home/"+getpass.getuser()+"/TextMiner/Data/icon.png")
