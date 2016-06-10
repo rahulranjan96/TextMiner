@@ -27,7 +27,7 @@ class gui:
 
  def maindisplay(self):
   root = Tk()
-  root.minsize(500, 300)
+  root.minsize(1000,700)
   im = Image.open("/home/"+getpass.getuser()+"/TextMiner/Data/background.jpg")
   tkimage = ImageTk.PhotoImage(im)
   myvar=Label(root,image = tkimage)
@@ -46,52 +46,56 @@ class gui:
   self.getManualButton(root)
   self.dictionaryButton(root)
   option = OptionMenu(root, var, "nltk","polyglot")
-  option.pack()
+  option.place(x = 500, y = 470)
   self.getLibraryButton(root)
   root.mainloop()
 
 
- def getLibraryButton(self,root):
-  okbutton = Button(root,text="ok",bg="yellow",command=self.ok)
-  okbutton.pack()
  
 
  def browseButton(self,root):
   browseButton = Button(root,text="Browse",width=20,bg="red",command=partial(self.browse,root))
-  browseButton.pack()
- 
+  browseButton.place(x = 450, y = 230)
 
- def neButton(self,root):
-  neButton=Button(root,text="Named Entity Recognizer",width=20,bg="red",command=self.namedEntitychecker)
-  neButton.pack()
  
+ def stButton(self,root):
+  stButton=Button(root,text="Sentence Tokenizer",width=20,bg="red",command=self.sentTokenizechecker)
+  stButton.place(x = 450, y = 260)
+
+ 
+ def wtButton(self,root):
+  wtButton=Button(root,text="Word Tokenizer",width=20,bg="red",command=self.wordTokenizechecker)
+  wtButton.place(x = 450, y = 290)
+
 
  def posButton(self,root):
   posButton=Button(root,text="POS Tagger",width=20,bg="red",command=self.partofSpeechchecker)
-  posButton.pack()
- 
+  posButton.place(x = 450, y = 320)
 
- def stButton(self,root):
-  stButton=Button(root,text="Sentence Tokenizer",width=20,bg="red",command=self.sentTokenizechecker)
-  stButton.pack()
- 
 
- def wtButton(self,root):
-  wtButton=Button(root,text="Word Tokenizer",width=20,bg="red",command=self.wordTokenizechecker)
-  wtButton.pack()
+ def neButton(self,root):
+  neButton=Button(root,text="Named Entity Recognizer",width=20,bg="red",command=self.namedEntitychecker)
+  neButton.place(x = 450, y = 350)
+
 
  def manualButton(self,root):
   manualButton=Button(root,text="Manually Annotate",width=20,bg="red",command=self.manual)
-  manualButton.pack()
+  manualButton.place(x = 450, y = 380)
+
 
  def getManualButton(self,root):
   getManualButton=Button(root,text="Get Manual Annotations",width=20,bg="red",command=self.getManual)
-  getManualButton.pack()
+  getManualButton.place(x = 450, y = 410)
 
 
  def dictionaryButton(self,root):
   dictionaryButton = Button(root,text="Give Dictionary",width=20,bg="red",command=self.dictionary)
-  dictionaryButton.pack()
+  dictionaryButton.place(x = 450, y = 440)
+
+
+ def getLibraryButton(self,root):
+  okbutton = Button(root,text="ok",bg="yellow",command=self.ok)
+  okbutton.place(x = 500, y = 500)
 
 
 
