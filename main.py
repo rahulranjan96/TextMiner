@@ -29,6 +29,7 @@ class gui:
 
  def __init__(self):
   self.customFont = ('Times', 20, 'bold')
+  self.catSelector = 0
   self.maindisplay()
   
 
@@ -41,7 +42,7 @@ class gui:
   myvar.place(x=0, y=0, relwidth=1.0, relheight=1.0)
   var  = StringVar(root)
   self.er = var
-  var.set("nltk")
+  var.set("NLTK")
   root.title("TextMiner")
   self.icon(root)
   self.browseButton(root)
@@ -104,8 +105,48 @@ class gui:
  def getLibraryButton(self,root):
   okbutton = Button(root,text="OK",bg="blue",font=self.customFont,command=self.ok)
   okbutton.place(x = 550, y = 550)
+ def getLibraryButton1(self,root,widget):
+  okbutton = Button(root,text="OK",bg="blue",font=self.customFont,command=partial(self.ok1,widget))
+  okbutton.pack(side=LEFT)
 
+ def ok1(self,root):
+  vare = self.er1
+  a = vare.get()
+  if(a=="Get Person Annotated"):
+    print(a)
+    self.getPerson(root,0)
+  elif(a=="Get GPE Annotated"):
+    self.getPerson(root,1)
+  else:
+    print("Get Person Annotated")
 
+ def docview(self,filename,root):
+  docview = Toplevel() 
+  docview.title("Document: "+self.name)
+  self.icon(docview)
+  f=open(filename,"r+")
+  data = f.read()
+  self.myText=data
+  S = Scrollbar(docview)
+  docWidget = Text(docview,height=20)
+  S.pack(side=RIGHT,fill=Y)
+  docWidget.pack(expand = 1, fill= BOTH)
+  S.config(command=docWidget.yview)
+  docWidget.config(yscrollcommand=S.set)
+  docWidget.insert(END,data)
+  docWidget.config(state=DISABLED)
+  #getPersonButton=Button(docview,text="Get Person Annotated",bg="red",command=partial(self.getPerson,docWidget))
+  #getPersonButton.pack(side=LEFT)
+  var1  = StringVar(docview)
+  var1.set("Get Person Annotated")
+  self.er1 = var1
+  option = OptionMenu(docview, var1, "Get Person Annotated","Get GPE Annotated")
+  option.config(height=2)
+  option.pack(side=LEFT)
+  self.getLibraryButton1(docview ,docWidget)
+  highlighDictionaryButton =Button(docview,text="Highlight Dictionary",bg="red",command=partial(self.highlightDictionary,docWidget))
+  highlighDictionaryButton.pack(side=RIGHT)
+  #docview.mainloop()
 
  def sentTokenizechecker(self):
   if hasattr(self, "name"):
@@ -402,40 +443,23 @@ class gui:
   print(self.value)
 
 
- def docview(self,filename,root):
-  docview = Toplevel() 
-  docview.title("Document: "+self.name)
-  self.icon(docview)
-  f=open(filename,"r+")
-  data = f.read()
-  self.myText=data
-  S = Scrollbar(docview)
-  docWidget = Text(docview,height=20)
-  S.pack(side=RIGHT,fill=Y)
-  docWidget.pack(expand = 1, fill= BOTH)
-  S.config(command=docWidget.yview)
-  docWidget.config(yscrollcommand=S.set)
-  docWidget.insert(END,data)
-  docWidget.config(state=DISABLED)
-  getPersonButton=Button(docview,text="Get Person Annotated",bg="red",command=partial(self.getPerson,docWidget))
-  getPersonButton.pack(side=LEFT)
-  highlighDictionaryButton =Button(docview,text="Highlight Dictionary",bg="red",command=partial(self.highlightDictionary,docWidget))
-  highlighDictionaryButton.pack(side=RIGHT)
-  #docview.mainloop()
-
-
- def getPerson(self,widget):
-  ip = socket.gethostbyname(self.gethostbyname())
+ def getPerson(self,widget,categorySelector):
+  #ip = socket.gethostbyname(self.gethostbyname())
   #if you want to connect to local database then in the place of 10.11.12.25 write ip
   #for Main Server Ip write the ip in the place of 10.11.12.25
-  db = MySQLdb.connect("10.11.12.25","root","","manual_annotations")
+  db = MySQLdb.connect("localhost","root","","manual_annotations")
   cursor = db.cursor()
-  sql = """SELECT name FROM annotations WHERE category = 'Person' """ 
+  if(categorySelector==0):
+  	sql = """SELECT name FROM annotations WHERE category = 'Person' """ 
+  	color = "yellow"
+  else:
+  	color = "red"
+  	sql = """SELECT name FROM annotations WHERE category = 'GPE' """
   cursor.execute(sql)
   results = cursor.fetchall()
   for row in results:
     name = row[0]
-    self.highlight(name,widget,"yellow",1)
+    self.highlight(name,widget,color,1)
   db.commit()
 
  
