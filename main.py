@@ -104,7 +104,7 @@ class gui:
 
 
  def getLibraryButton(self,root):
-  okbutton = Button(root,text="OK",bg="green",font=self.customFont,command=self.ok)
+  okbutton = Button(root,text="OK",bg="green",font=self.customFont,command=self.ok,height=1)
   okbutton.place(x = 550, y = 550)
  def getLibraryButton1(self,root,widget):
   okbutton = Button(root,text="OK",bg="blue",font=self.customFont,command=partial(self.ok1,widget))
@@ -487,9 +487,10 @@ class gui:
  def manual(self):
   if hasattr(self,'name'):
     manual=Toplevel() 
+    name = self.name
     manual.title("Manually Annotate: "+self.name)
     self.icon(manual)
-    manual.minsize(1200,1000)
+    manual.minsize(1200,600)
     manual.resizable(width=False, height=False)
     manualWidget=Text(manual,height=20)
     manualWidget.insert(0.0,self.myText)
@@ -498,19 +499,19 @@ class gui:
     label_2=Label(manual,text="Category",fg="green")
     self.entry_1=Entry(manual)
     self.entry_2=Entry(manual)
-    label_1.place(x = 200, y = 900)
-    label_2.place(x = 200, y = 925)
-    self.entry_1.place(x = 300, y = 900)
-    self.entry_2.place(x = 300, y = 925)
+    label_1.place(x = 200, y = 500)
+    label_2.place(x = 200, y = 525)
+    self.entry_1.place(x = 300, y = 500)
+    self.entry_2.place(x = 300, y = 525)
     self.manual_array=set()
     self.entry_3=Entry(manual)
-    self.entry_3.place(x = 600, y = 900)
-    submit=Button(manual,text="Submit",bg="red",command=self.submit)
-    submit.place(x = 250, y = 950)
+    self.entry_3.place(x = 600, y = 500)
+    submit=Button(manual,text="Submit",bg="red",command=partial(self.submit,name))
+    submit.place(x = 250, y = 550)
     done=Button(manual,text="Done",bg="red",command=partial(self.done,manual))
-    done.place(x = 900, y = 925)
+    done.place(x = 900, y = 525)
     highlight=Button(manual,text="HIGHLIGHT",bg="red",command=partial(self.getText,manualWidget))
-    highlight.place(x = 600, y = 925)
+    highlight.place(x = 600, y = 525)
     #manual.mainloop()
   else:
     content = "Please Select a File"
@@ -548,16 +549,17 @@ class gui:
 
 
 
- def submit(self):
+ def submit(self,filename):
   db = MySQLdb.connect("localhost","root","","manual_annotations")
   cursor = db.cursor()
   var1 = self.entry_1.get()
   print(var1)
   var2 = self.entry_2.get()
+  var3 = filename
   sql = "INSERT INTO annotations(name, \
-         category) \
-         VALUES ('%s','%s')" % \
-         (var1,var2)
+         category,filename) \
+         VALUES ('%s','%s','%s')" % \
+         (var1,var2,var3)
   cursor.execute(sql)
   db.commit()
   self.manual_array.add(self.entry_1.get()+"~"+self.entry_2.get())
@@ -569,11 +571,25 @@ class gui:
     
  def getManual(self):
   if hasattr(self,'name'):
-    manualAnnot=Toplevel() 
+    manualAnnot=Toplevel()
+    filename = self.name
     manualAnnot.title("Manual Annotate: "+self.name)
     self.icon(manualAnnot)
-    manualFile=open(self.name + "_manualAnnot.txt","r+")
-    manualText=manualFile.read()
+    db = MySQLdb.connect("localhost","root","","manual_annotations")
+    cursor = db.cursor()
+    sql = "SELECT * FROM annotations WHERE filename = '%s'" % (filename)
+    cursor.execute(sql)
+    string = ""
+    results = cursor.fetchall()
+    string = string + "Name" + "\t\t\t" + "Category" + "\n"
+    string = string + "------------------------------------" + "\n"
+    for row in results:
+    	a = row[0]
+    	string = string + row[1] + "\t\t\t"+ row[2] + "\n"
+    db.commit()
+	#manualFile=open(self.name + "_manualAnnot.txt","r+")
+    #manualText=manualFile.read()
+    manualText = string
     manualAnnotWidget=Text(manualAnnot)
     manualAnnotWidget.insert(0.0,manualText)
     manualAnnotWidget.pack(expand = 1, fill= BOTH)
