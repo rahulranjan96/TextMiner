@@ -103,7 +103,7 @@ class gui:
 
 
  def getLibraryButton(self,root):
-  okbutton = Button(root,text="OK",bg="green",font=self.customFont,command=self.ok)
+  okbutton = Button(root,text="OK",bg="green",font=self.customFont,command=self.ok,height=1)
   okbutton.place(x = 550, y = 550)
 
 
@@ -463,9 +463,10 @@ class gui:
  def manual(self):
   if hasattr(self,'name'):
     manual=Toplevel() 
+    name = self.name
     manual.title("Manually Annotate: "+self.name)
     self.icon(manual)
-    manual.minsize(1200,1000)
+    manual.minsize(1200,600)
     manual.resizable(width=False, height=False)
     frame1=Frame(manual,width=1200,height=800)
     frame1.pack_propagate(0)
@@ -530,16 +531,17 @@ class gui:
 
 
 
- def submit(self):
+ def submit(self,filename):
   db = MySQLdb.connect("localhost","root","","manual_annotations")
   cursor = db.cursor()
   var1 = self.entry_1.get()
   print(var1)
   var2 = self.entry_2.get()
+  var3 = filename
   sql = "INSERT INTO annotations(name, \
-         category) \
-         VALUES ('%s','%s')" % \
-         (var1,var2)
+         category,filename) \
+         VALUES ('%s','%s','%s')" % \
+         (var1,var2,var3)
   cursor.execute(sql)
   db.commit()
   self.manual_array.add(self.entry_1.get()+"~"+self.entry_2.get())
@@ -551,11 +553,25 @@ class gui:
     
  def getManual(self):
   if hasattr(self,'name'):
-    manualAnnot=Toplevel() 
+    manualAnnot=Toplevel()
+    filename = self.name
     manualAnnot.title("Manual Annotate: "+self.name)
     self.icon(manualAnnot)
-    manualFile=open(self.name + "_manualAnnot.txt","r+")
-    manualText=manualFile.read()
+    db = MySQLdb.connect("localhost","root","","manual_annotations")
+    cursor = db.cursor()
+    sql = "SELECT * FROM annotations WHERE filename = '%s'" % (filename)
+    cursor.execute(sql)
+    string = ""
+    results = cursor.fetchall()
+    string = string + "Name" + "\t\t\t" + "Category" + "\n"
+    string = string + "------------------------------------" + "\n"
+    for row in results:
+    	a = row[0]
+    	string = string + row[1] + "\t\t\t"+ row[2] + "\n"
+    db.commit()
+	#manualFile=open(self.name + "_manualAnnot.txt","r+")
+    #manualText=manualFile.read()
+    manualText = string
     manualAnnotWidget=Text(manualAnnot)
     manualAnnotWidget.insert(0.0,manualText)
     manualAnnotWidget.pack(expand = 1, fill= BOTH)
