@@ -42,7 +42,7 @@ class gui:
   myvar.place(x=0, y=0, relwidth=1.0, relheight=1.0)
   var  = StringVar(root)
   self.er = var
-  var.set("nltk")
+  var.set("NLTK")
   root.title("TextMiner")
   self.icon(root)
   self.browseButton(root)
