@@ -479,7 +479,7 @@ class gui:
     self.entry_3.pack()
     submit=Button(manual,text="Submit",bg="red",command=self.submit)
     submit.pack()
-    done=Button(manual,text="Done",bg="red",command=self.done)
+    done=Button(manual,text="Done",bg="red",command=partial(self.done,manual))
     done.pack()
     highlight=Button(manual,text="HIGHLIGHT",bg="red",command=partial(self.getText,manualWidget))
     highlight.pack()
@@ -535,12 +535,8 @@ class gui:
   self.manual_array.add(self.entry_1.get()+"~"+self.entry_2.get())
  
  
- def done(self):
-  f = open(self.name + "_manualAnnot.txt","w")
-  for i in self.manual_array:
-   f.write(i)
-   f.write("\n")
-  self.manual.destroy()
+ def done(self,widget):
+  widget.destroy()
 
     
  def getManual(self):
