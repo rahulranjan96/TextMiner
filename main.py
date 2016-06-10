@@ -35,6 +35,7 @@ class gui:
  def maindisplay(self):
   root = Tk()
   root.minsize(1000,700)
+  root.resizable(width=False, height=False)
   im = Image.open("/home/"+getpass.getuser()+"/TextMiner/Data/background.jpg")
   tkimage = ImageTk.PhotoImage(im)
   myvar=Label(root,image = tkimage)
@@ -102,7 +103,7 @@ class gui:
 
 
  def getLibraryButton(self,root):
-  okbutton = Button(root,text="OK",bg="blue",font=self.customFont,command=self.ok)
+  okbutton = Button(root,text="OK",bg="green",font=self.customFont,command=self.ok)
   okbutton.place(x = 550, y = 550)
 
 
@@ -464,26 +465,28 @@ class gui:
     manual=Toplevel() 
     manual.title("Manually Annotate: "+self.name)
     self.icon(manual)
-    manualWidget=Text(manual)
+    manual.minsize(1200,1000)
+    manual.resizable(width=False, height=False)
+    manualWidget=Text(manual,height=20)
     manualWidget.insert(0.0,self.myText)
     manualWidget.pack(expand = 1, fill= BOTH)
-    label_1=Label(manual,text="Word")
-    label_2=Label(manual,text="Category")
+    label_1=Label(manual,text="Word",fg="green")
+    label_2=Label(manual,text="Category",fg="green")
     self.entry_1=Entry(manual)
     self.entry_2=Entry(manual)
-    label_1.pack()
-    label_2.pack()
-    self.entry_1.pack()
-    self.entry_2.pack()
+    label_1.place(x = 200, y = 900)
+    label_2.place(x = 200, y = 925)
+    self.entry_1.place(x = 300, y = 900)
+    self.entry_2.place(x = 300, y = 925)
     self.manual_array=set()
     self.entry_3=Entry(manual)
-    self.entry_3.pack()
+    self.entry_3.place(x = 600, y = 900)
     submit=Button(manual,text="Submit",bg="red",command=self.submit)
-    submit.pack()
+    submit.place(x = 250, y = 950)
     done=Button(manual,text="Done",bg="red",command=partial(self.done,manual))
-    done.pack()
+    done.place(x = 900, y = 925)
     highlight=Button(manual,text="HIGHLIGHT",bg="red",command=partial(self.getText,manualWidget))
-    highlight.pack()
+    highlight.place(x = 600, y = 925)
     #manual.mainloop()
   else:
     content = "Please Select a File"
