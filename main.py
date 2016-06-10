@@ -61,42 +61,42 @@ class gui:
  
 
  def browseButton(self,root):
-  browseButton = Button(root,text="Browse",width=20,bg="red",font=self.customFont,command=partial(self.browse,root))
+  browseButton = Button(root,text="Browse",width=21,bg="red",font=self.customFont,command=partial(self.browse,root))
   browseButton.place(x = 400, y = 150)
 
  
  def stButton(self,root):
-  stButton=Button(root,text="Sentence Tokenizer",width=20,bg="red",font=self.customFont,command=self.sentTokenizechecker)
+  stButton=Button(root,text="Sentence Tokenizer",width=21,bg="red",font=self.customFont,command=self.sentTokenizechecker)
   stButton.place(x = 400, y = 200)
 
  
  def wtButton(self,root):
-  wtButton=Button(root,text="Word Tokenizer",width=20,bg="red",font=self.customFont,command=self.wordTokenizechecker)
+  wtButton=Button(root,text="Word Tokenizer",width=21,bg="red",font=self.customFont,command=self.wordTokenizechecker)
   wtButton.place(x = 400, y = 250)
 
 
  def posButton(self,root):
-  posButton=Button(root,text="POS Tagger",width=20,bg="red",font=self.customFont,command=self.partofSpeechchecker)
+  posButton=Button(root,text="POS Tagger",width=21,bg="red",font=self.customFont,command=self.partofSpeechchecker)
   posButton.place(x = 400, y = 300)
 
 
  def neButton(self,root):
-  neButton=Button(root,text="Named Entity Recognizer",width=20,bg="red",font=self.customFont,command=self.namedEntitychecker)
+  neButton=Button(root,text="Named Entity Recognizer",width=21,bg="red",font=self.customFont,command=self.namedEntitychecker)
   neButton.place(x = 400, y = 350)
 
 
  def manualButton(self,root):
-  manualButton=Button(root,text="Manually Annotate",width=20,bg="red",font=self.customFont,command=self.manual)
+  manualButton=Button(root,text="Manually Annotate",width=21,bg="red",font=self.customFont,command=self.manual)
   manualButton.place(x = 400, y = 400)
 
 
  def getManualButton(self,root):
-  getManualButton=Button(root,text="Get Manual Annotations",width=20,bg="red",font=self.customFont,command=self.getManual)
+  getManualButton=Button(root,text="Get Manual Annotations",width=21,bg="red",font=self.customFont,command=self.getManual)
   getManualButton.place(x = 400, y = 450)
 
 
  def dictionaryButton(self,root):
-  dictionaryButton = Button(root,text="Give Dictionary",width=20,bg="red",font=self.customFont,command=self.dictionary)
+  dictionaryButton = Button(root,text="Give Dictionary",width=21,bg="red",font=self.customFont,command=self.dictionary)
   dictionaryButton.place(x = 400, y = 500)
 
 
@@ -382,7 +382,7 @@ class gui:
 
 
  def browse(self,root):
-  filename = filedialog.askopenfilename(initialdir = "/home/"+getpass.getuser()+"/TextMiner/Data",title = "Choose your file",filetypes = (("Text files","*.txt"),))
+  filename = filedialog.askopenfilename(initialdir = "/home/"+getpass.getuser()+"/TextMiner/Sample Text",title = "Choose your file",filetypes = (("Text files","*.txt"),))
   self.name=(filename.split('/')[-1]).split('.')[0]
   self.docview(filename,root)
 
@@ -439,7 +439,7 @@ class gui:
 
  
  def dictionary(self):
-  self.dicfileName = filedialog.askopenfilename(initialdir = "/home/"+getpass.getuser()+"/TextMiner/Data",title = "Choose your file",filetypes = (("Text files","*.txt"),))
+  self.dicfileName = filedialog.askopenfilename(initialdir = "/home/"+getpass.getuser()+"/TextMiner/Sample Dictionary",title = "Choose your file",filetypes = (("Text files","*.txt"),))
   self.dicName=(self.dicfileName.split('/')[-1]).split('.')[0]
   with open(self.dicfileName) as fp:
     for line in fp:
@@ -557,7 +557,7 @@ class gui:
   else:
     content = "Please Select a File"
     messagebox.showinfo("Error! Oops",content)
-    
+
 
  def icon(self,window):
   icon = tkinter.Image("photo", file="/home/"+getpass.getuser()+"/TextMiner/Data/icon.png")
