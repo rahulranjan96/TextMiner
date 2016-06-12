@@ -14,6 +14,7 @@ import polyglotName
 import polyglotSent
 import polyglotWord
 import polyglotSpeech
+import pymysql.cursors
 import MySQLdb
 from functools import partial
 from PIL import ImageTk
@@ -29,6 +30,7 @@ class gui:
 
  def __init__(self):
   self.customFont = ('Times', 20, 'bold')
+  self.ip="172.16.115.15"
   self.maindisplay()
   
 
@@ -426,18 +428,21 @@ class gui:
 
 
  def getPerson(self,widget):
-  ip = socket.gethostbyname(self.gethostbyname())
+  #ip = socket.gethostbyname(self.gethostbyname())
   #if you want to connect to local database then in the place of 10.11.12.25 write ip
   #for Main Server Ip write the ip in the place of 10.11.12.25
-  db = MySQLdb.connect("10.11.12.25","root","","manual_annotations")
+  db = self.databaseConnection()
   cursor = db.cursor()
-  sql = """SELECT name FROM annotations WHERE category = 'Person' """ 
+  table=self.name
+  print(table)
+  sql = """SELECT word FROM %s WHERE category = 'PERSON'""" % table 
   cursor.execute(sql)
   results = cursor.fetchall()
   for row in results:
     name = row[0]
     self.highlight(name,widget,"yellow",1)
   db.commit()
+  db.close()
 
  
  def dictionary(self):
@@ -536,20 +541,35 @@ class gui:
 
 
 
- def submit(self,filename):
-  db = MySQLdb.connect("localhost","root","","manual_annotations")
+ def submit(self):
+  print(self.entry_1.get())
+  print(self.entry_2.get())
+  db = self.databaseConnection()
   cursor = db.cursor()
-  var1 = self.entry_1.get()
-  print(var1)
-  var2 = self.entry_2.get()
-  var3 = filename
-  sql = "INSERT INTO annotations(name, \
-         category,filename) \
-         VALUES ('%s','%s','%s')" % \
-         (var1,var2,var3)
-  cursor.execute(sql)
-  db.commit()
-  self.manual_array.add(self.entry_1.get()+"~"+self.entry_2.get())
+  sql1 = """SHOW TABLES LIKE '%s'""" % self.name
+  cursor.execute(sql1)
+  result = cursor.fetchone()
+  if result:
+   word = self.entry_1.get()
+   category = self.entry_2.get() 
+   sql2 = """INSERT INTO %s (word,category) VALUES ('%s','%s')""" % (self.name,word,category)
+   cursor.execute(sql)
+   db.commit()
+  else:
+   sql2 =  """CREATE TABLE %s (
+       `id` INT NOT NULL AUTO_INCREMENT,
+       `word` VARCHAR(50) NULL DEFAULT '',
+       `category` VARCHAR(50) NULL DEFAULT '',
+       PRIMARY KEY (id))COLLATE='utf8_bin'""" % self.name
+   cursor.execute(sql2)
+   word = self.entry_1.get()
+   category = self.entry_2.get() 
+   sql3 = """INSERT INTO %s (word,category) VALUES ('%s','%s')""" % (self.name,word,category)
+   cursor.execute(sql3)
+   db.commit()
+  db.close()
+
+
  
  
  def done(self,widget):
@@ -562,7 +582,7 @@ class gui:
     filename = self.name
     manualAnnot.title("Manual Annotate: "+self.name)
     self.icon(manualAnnot)
-    db = MySQLdb.connect("localhost","root","","manual_annotations")
+    db = MySQLdb.connect(self.ip,"root","","manual_annotations")
     cursor = db.cursor()
     sql = "SELECT * FROM annotations WHERE filename = '%s'" % (filename)
     cursor.execute(sql)
@@ -589,6 +609,12 @@ class gui:
  def icon(self,window):
   icon = tkinter.Image("photo", file="/home/"+getpass.getuser()+"/TextMiner/Data/icon.png")
   window.tk.call('wm','iconphoto',window._w,icon)
+
+ def databaseConnection(self):
+  database=MySQLdb.connect(host="localhost",user="root",passwd="",db="TextMiner",unix_socket="/opt/lampp/var/mysql/mysql.sock")
+  return database
+
+
 
 
 
