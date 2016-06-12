@@ -420,22 +420,33 @@ class gui:
   T.config(yscrollcommand=S.set)
   T.insert(END,data)
   T.config(state=DISABLED)
-  getPersonButton=Button(docview,text="Get Person Annotated",bg="red",command=partial(self.getPerson,T))
-  getPersonButton.pack(side=LEFT)
+  var=StringVar(docview)
+  var.set("Organisation")
+  option = OptionMenu(docview,var,"Organisation","Person","Location","Date","Time","Money","Percent","Facility","GPE")
+  option.config(width=8,height=2)
+  option.pack(side=LEFT)
+  selectCategoryButton = Button(docview,text="OK",bg="red",command=partial(self.highlightchoice,var,T))
+  selectCategoryButton.pack(side=LEFT)
   highlighDictionaryButton =Button(docview,text="Highlight Dictionary",bg="red",command=partial(self.highlightDictionary,T))
   highlighDictionaryButton.pack(side=RIGHT)
   #docview.mainloop()
 
+ def highlightchoice(self,var,widget):
+  choice = var.get()
+  self.highlightChoiceFromDatabase(widget,choice)
+  
+  
 
- def getPerson(self,widget):
+
+ def highlightChoiceFromDatabase(self,widget,choice):
   #ip = socket.gethostbyname(self.gethostbyname())
   #if you want to connect to local database then in the place of 10.11.12.25 write ip
   #for Main Server Ip write the ip in the place of 10.11.12.25
+  widget.tag_remove("COLOR", 1.0, "end")
   db = self.databaseConnection()
   cursor = db.cursor()
   table=self.name
-  print(table)
-  sql = """SELECT word FROM %s WHERE category = 'PERSON'""" % table 
+  sql = """SELECT word FROM %s WHERE category = '%s'""" % (table,choice) 
   cursor.execute(sql)
   results = cursor.fetchall()
   for row in results:
@@ -443,6 +454,7 @@ class gui:
     self.highlight(name,widget,"yellow",1)
   db.commit()
   db.close()
+
 
  
  def dictionary(self):
@@ -487,23 +499,28 @@ class gui:
     T.config(yscrollcommand=S.set)
     T.insert(0.0,self.myText)
     T.config(state=DISABLED)
-    label_1=Label(frame2,text="Word",fg="red")
-    label_2=Label(frame2,text="Category",fg="red")
-    self.entry_1=Entry(frame2)
-    self.entry_2=Entry(frame2)
-    label_1.place(x=100,y=50)
-    label_2.place(x=100,y=70)
-    self.entry_1.place(x=250,y=50)
-    self.entry_2.place(x=250,y=70)
-    self.manual_array=set()
+    #label_1=Label(frame2,text="Word",fg="red")
+    #label_2=Label(frame2,text="Category",fg="red")
+    #self.entry_1=Entry(frame2)
+    #self.entry_2=Entry(frame2)
+    self.submitCat=StringVar(frame2)
+    self.submitCat.set("Organisation")
+    option = OptionMenu(frame2,self.submitCat,"Organisation","Person","Location","Date","Time","Money","Percent","Facility","GPE")
+    option.config(width=8,height=2)
+    option.place(x=100,y=20)
+    #label_1.place(x=100,y=50)
+    #label_2.place(x=100,y=50)
+    #self.entry_1.place(x=250,y=50)
+    #self.entry_2.place(x=250,y=70)
+    #self.manual_array=set()
     self.entry_3=Entry(frame2)
     self.entry_3.place(x=500,y=50)
-    submit=Button(frame2,text="Submit",bg="red",command=self.submit)
-    submit.place(x=100,y=100)
+    submit=Button(frame2,text="Submit",bg="red",command=partial(self.submit,T))
+    submit.place(x=250,y=30)
     done=Button(frame2,text="Done",bg="red",command=partial(self.done,manual))
     done.place(x=900,y=60)
     highlight=Button(frame2,text="HIGHLIGHT",bg="red",command=partial(self.getText,T))
-    highlight.place(x=500,y=70)
+    highlight.place(x=500,y=100)
     #manual.mainloop()
   else:
     content = "Please Select a File"
@@ -517,7 +534,7 @@ class gui:
 
  def highlight(self,text,widget,color,cond): #pass cond=1 if you want to recursively highlight a set of words from the text,else pass cond=0
   try:
-    search = " " + text + " "
+    search = text
     start=1.0
     first=widget.search(search,1.0,stopindex=END)
     widget.tag_configure("COLOR", background=color)
@@ -525,9 +542,9 @@ class gui:
      widget.tag_remove("COLOR", 1.0, "end")
     while first:
      row,col=first.split('.')
-     col = int(col) + 1
+     col = int(col)
      first = row+'.'+str(col)
-     last=int(col)+len(search) - 2
+     last=int(col)+len(search) - 1
      last=row+'.'+str(last)
      row,col=last.split('.') 
      print(first)
@@ -541,19 +558,20 @@ class gui:
 
 
 
- def submit(self):
-  print(self.entry_1.get())
-  print(self.entry_2.get())
+ def submit(self,T):
+  #print(self.entry_1.get())
+  #print(self.entry_2.get())
+  print(T.selection_get())
   db = self.databaseConnection()
   cursor = db.cursor()
   sql1 = """SHOW TABLES LIKE '%s'""" % self.name
   cursor.execute(sql1)
   result = cursor.fetchone()
   if result:
-   word = self.entry_1.get()
-   category = self.entry_2.get() 
+   word = T.selection_get()
+   category = self.submitCat.get() 
    sql2 = """INSERT INTO %s (word,category) VALUES ('%s','%s')""" % (self.name,word,category)
-   cursor.execute(sql)
+   cursor.execute(sql2)
    db.commit()
   else:
    sql2 =  """CREATE TABLE %s (
@@ -562,8 +580,8 @@ class gui:
        `category` VARCHAR(50) NULL DEFAULT '',
        PRIMARY KEY (id))COLLATE='utf8_bin'""" % self.name
    cursor.execute(sql2)
-   word = self.entry_1.get()
-   category = self.entry_2.get() 
+   word = T.selection_get()
+   category = self.submitCat.get()
    sql3 = """INSERT INTO %s (word,category) VALUES ('%s','%s')""" % (self.name,word,category)
    cursor.execute(sql3)
    db.commit()
@@ -582,13 +600,13 @@ class gui:
     filename = self.name
     manualAnnot.title("Manual Annotate: "+self.name)
     self.icon(manualAnnot)
-    db = MySQLdb.connect(self.ip,"root","","manual_annotations")
+    db = self.databaseConnection()
     cursor = db.cursor()
-    sql = "SELECT * FROM annotations WHERE filename = '%s'" % (filename)
+    sql = """SELECT * FROM %s""" % self.name
     cursor.execute(sql)
     string = ""
     results = cursor.fetchall()
-    string = string + "Name" + "\t\t\t" + "Category" + "\n"
+    string = string + "Word" + "\t\t\t" + "Category" + "\n"
     string = string + "------------------------------------" + "\n"
     for row in results:
     	a = row[0]
