@@ -14,7 +14,6 @@ import polyglotName
 import polyglotSent
 import polyglotWord
 import polyglotSpeech
-import pymysql.cursors
 import MySQLdb
 from functools import partial
 from PIL import ImageTk
@@ -42,9 +41,6 @@ class gui:
   tkimage = ImageTk.PhotoImage(im)
   myvar=Label(root,image = tkimage)
   myvar.place(x=0, y=0, relwidth=1.0, relheight=1.0)
-  var  = StringVar(root)
-  self.er = var
-  var.set("NLTK")
   root.title("TextMiner")
   self.icon(root)
   self.browseButton(root)
@@ -55,10 +51,11 @@ class gui:
   self.manualButton(root)
   self.getManualButton(root)
   self.dictionaryButton(root)
-  option = OptionMenu(root, var, "NLTK","POLYGLOT")
-  option.config(width=8,height=2)
-  option.place(x = 450, y = 550)
-  self.getLibraryButton(root)
+  self.var  = StringVar(root)
+  self.var.set("NLTK")
+  option = OptionMenu(root, self.var, "NLTK","POLYGLOT")
+  option.config(width=30,height=3)
+  option.place(x = 350, y = 550)
   root.mainloop()
 
 
@@ -66,114 +63,97 @@ class gui:
 
  def browseButton(self,root):
   browseButton = Button(root,text="Browse",width=21,bg="red",font=self.customFont,command=partial(self.browse,root))
-  browseButton.place(x = 400, y = 150)
+  browseButton.place(x = 350, y = 150)
 
  
  def stButton(self,root):
   stButton=Button(root,text="Sentence Tokenizer",width=21,bg="red",font=self.customFont,command=self.sentTokenizechecker)
-  stButton.place(x = 400, y = 200)
+  stButton.place(x = 350, y = 200)
 
  
  def wtButton(self,root):
   wtButton=Button(root,text="Word Tokenizer",width=21,bg="red",font=self.customFont,command=self.wordTokenizechecker)
-  wtButton.place(x = 400, y = 250)
+  wtButton.place(x = 350, y = 250)
 
 
  def posButton(self,root):
   posButton=Button(root,text="POS Tagger",width=21,bg="red",font=self.customFont,command=self.partofSpeechchecker)
-  posButton.place(x = 400, y = 300)
+  posButton.place(x = 350, y = 300)
 
 
  def neButton(self,root):
   neButton=Button(root,text="Named Entity Recognizer",width=21,bg="red",font=self.customFont,command=self.namedEntitychecker)
-  neButton.place(x = 400, y = 350)
+  neButton.place(x = 350, y = 350)
 
 
  def manualButton(self,root):
   manualButton=Button(root,text="Manually Annotate",width=21,bg="red",font=self.customFont,command=self.manual)
-  manualButton.place(x = 400, y = 400)
+  manualButton.place(x = 350, y = 400)
 
 
  def getManualButton(self,root):
   getManualButton=Button(root,text="Get Manual Annotations",width=21,bg="red",font=self.customFont,command=self.getManual)
-  getManualButton.place(x = 400, y = 450)
+  getManualButton.place(x = 350, y = 450)
 
 
  def dictionaryButton(self,root):
   dictionaryButton = Button(root,text="Give Dictionary",width=21,bg="red",font=self.customFont,command=self.dictionary)
-  dictionaryButton.place(x = 400, y = 500)
-
-
- def getLibraryButton(self,root):
-  okbutton = Button(root,text="OK",bg="green",font=self.customFont,command=self.ok,height=1)
-  okbutton.place(x = 550, y = 550)
+  dictionaryButton.place(x = 350, y = 500)
 
 
 
  def sentTokenizechecker(self):
   if hasattr(self, "name"):
-    if hasattr(self, "value"):
-      if(self.value==0):
-       self.sentTokenizeNLTK()
-       print("NLTK")
-      else:
-        print("POLYGLOT")
-        self.sentTokenizePolyglot()
-    else:
+   if(self.var.get()=="NLTK"):
      self.sentTokenizeNLTK()
+     #print("NLTK")
+   else:
+     #print("POLYGLOT")
+     self.sentTokenizePolyglot()
   else:
-    content = "Please Select a File"
-    messagebox.showinfo("Error! Oops",content)
- 
+   content = "Please Select a File"
+   messagebox.showinfo("Error! Oops",content)
+
 
  def wordTokenizechecker(self):
-  if hasattr(self,"name"):
-    if hasattr(self,"value"):
-      if(self.value==0):
-        self.wordTokenizeNLTK()
-        print("NLTK")
-      else:
-        print("POLYGLOT")
-        self.wordTokenizePolyglot()
-    else:
-      self.wordTokenizeNLTK()
+  if hasattr(self, "name"):
+   if(self.var.get()=="NLTK"):
+     self.wordTokenizeNLTK()
+     #print("NLTK")
+   else:
+     #print("POLYGLOT")
+     self.wordTokenizePolyglot()
   else:
-    content = "Please select a  file"
-    messagebox.showinfo("Error! Ooops",content)
+   content = "Please Select a File"
+   messagebox.showinfo("Error! Oops",content)
 
 
  def partofSpeechchecker(self):
-  if hasattr(self,"name"):
-    if hasattr(self,"value"):
-      if(self.value==0):
-        self.partofSpeechNLTK()
-        print("NLTK")
-      else:
-        print("POLYGLOT")
-        self.partofSpeechPolyglot()
-    else:
-      self.partofSpeechNLTK()
+  if hasattr(self, "name"):
+   if(self.var.get()=="NLTK"):
+     self.partofSpeechNLTK()
+     #print("NLTK")
+   else:
+     #print("POLYGLOT")
+     self.partofSpeechPolyglot()
   else:
-    content = "Please select a file"
-    messagebox.showinfo("Error Oops",content)
+   content = "Please Select a File"
+   messagebox.showinfo("Error! Oops",content)
+
 
 
  def namedEntitychecker(self):
-  if hasattr(self,"name"):
-    if hasattr(self,"value"):
-      if(self.value==0):
-        self.namedEntityNLTK()
-        print("NLTK")
-      else:
-        print("POLYGLOT")
-        self.namedEntityPolyglot()
-    else:
-      self.namedEntityNLTK()
+  if hasattr(self, "name"):
+   if(self.var.get()=="NLTK"):
+     self.namedEntityNLTK()
+     #print("NLTK")
+   else:
+     #print("POLYGLOT")
+     self.namedEntityPolyglot()
   else:
-    content = "Please select a file"
-    messagebox.showinfo("Error! Ooops",content)
-
-
+   content = "Please Select a File"
+   messagebox.showinfo("Error! Oops",content)
+ 
 
  def sentTokenizeNLTK(self):
   if hasattr(self,'name'):
@@ -372,7 +352,7 @@ class gui:
       var = 0
    else:
       string = string + i + " "
-  print(string)
+  #print(string)
   data = string
   S = Scrollbar(polyglotNameWin)
   T = Text(polyglotNameWin,height=20)
@@ -391,8 +371,8 @@ class gui:
   self.docview(filename,root)
 
 
- def ok(self):
-  vare = self.er
+ """def ok(self):
+  vare = self.var
   a = vare.get()
   if(a=="NLTK"):
     print(a)
@@ -402,7 +382,7 @@ class gui:
     self.value=1
   else:
     print("NLP")
-  print(self.value)
+  print(self.value)"""
 
 
  def docview(self,filename,root):
@@ -561,7 +541,7 @@ class gui:
  def submit(self,T):
   #print(self.entry_1.get())
   #print(self.entry_2.get())
-  print(T.selection_get())
+  #print(T.selection_get())
   db = self.databaseConnection()
   cursor = db.cursor()
   sql1 = """SHOW TABLES LIKE '%s'""" % self.name
