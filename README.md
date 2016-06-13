@@ -107,7 +107,7 @@ $ sudo apt-get install python3-mysqldb
 
 ```
 
-###We are also using Tkinter and Pillow libary for building GUI.
+###We are also using Tkinter and Pillow libraries for building GUI.
 To install Tkinter:
 ```
 $ sudo apt-get install python3-tk
