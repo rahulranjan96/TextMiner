@@ -1,3 +1,5 @@
+[![GitHub license](https://img.shields.io/badge/license-BSD-blue.svg)](https://raw.githubusercontent.com/rahulranjan96/TextMiner/master/LICENSE.txt?token=APHqCzbjidKXSG9I056xLviUt6URhmBtks5XZ6kYwA%3D%3D)
+
 TextMiner 1.0
 ==============
 
