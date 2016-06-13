@@ -9,6 +9,41 @@ NLP based information extractor:
 #Platforms
 This standalone application has been developed on Ubuntu 16.04.Ubuntu 14.04 should be workable.Windows users should install Ubuntu.
 
+#Proxy Settings:
+###Setting proxy authentication in apt.conf file:
+```
+$ sudo gedit /etc/apt/apt.conf
+```
+Add following lines in the file:
+```
+Acquire::http::proxy "http://username:password@proxy:port/";
+Acquire::https::proxy "https://username:password@proxy:port/";
+Acquire::ftp::proxy "ftp://username:password@proxy:port/";
+Acquire::socks::proxy "socks://username:password@proxy:port/";
+
+```
+###Setting proxy authentication in environment file:
+```
+$ sudo gedit /etc/environment
+```
+Add following lines in the file:
+```
+http_proxy="http://username:password@proxy:port/"
+https_proxy="https://username:password@proxy:port/"
+ftp_proxy="ftp://username:password@proxy:port/"
+socks_proxy="socks://username:password@proxy:port/"
+```
+###Setting proxy authentication in bash file:
+```
+$ sudo gedit ~/.bashrc
+
+```
+Add following lines at the last line of the file:
+```
+export {http,https,ftp}_proxy='http://username:password@proxy:port'
+
+```
+
 #Dependencies Installations:
 At present this application is simple enough but stands on some pretty complex Python Libraries which users should install before running this application.
 
