@@ -1,13 +1,13 @@
 TextMiner 1.0
 ==============
 
-NLP based information extractor
+NLP based information extractor:
 -------------------------------
 
 #Platforms
 This standalone application has been developed on Ubuntu 16.04.Ubuntu 14.04 should be workable.Windows users should install Ubuntu.
 
-#Dependencies Installations
+#Dependencies Installations:
 At present this application is simple enough but stands on some pretty complex Python Libraries which users should install before running this application.
 
 ###This software has been written in Python3.4 and Python3.4 is required to run it.
@@ -81,5 +81,19 @@ To install Pillow:
 $ sudo pip3 install Pillow
 $ sudo apt-get install libtiff5-dev libjpeg8-dev zlib1g-dev libfreetype6-dev liblcms2-dev libwebp-dev tcl8.6-dev tk8.6-dev python3-tk
 $ sudo apt-get install python3-pil.imagetk OR $ sudo apt-get install python3-imaging-tk
+
+```
+
+#To download and run this application
+
+###Clone this reository:
+```
+$ git clone https://github.com/rahulranjan96/TextMiner.git
+```
+###To run this application:
+
+```
+$ cd TextMiner
+$ python3 main.py
 
 ```
