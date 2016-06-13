@@ -57,7 +57,7 @@ $ sudo pip3 install polyglot
 ```
 Then we have to download models for Polyglot.
 ```
-$python3
+$ python3
 >> from polyglot.downloader import downloader
 >> downloader.download("embeddings2.en")
 >> downloader.download("pos2.en")
