@@ -29,7 +29,7 @@ class gui:
 
  def __init__(self):
   self.customFont = ('Times', 20, 'bold')
-  self.ip="172.16.115.15"
+  self.ip="127.0.0.1"
   self.maindisplay()
   
 
@@ -538,6 +538,9 @@ class gui:
 
 
 
+
+ """Method to insert manual annotations in the databse.For different files we have different tables which dynamically get created once annotation is being done."""
+
  def submit(self,T):
   #print(self.entry_1.get())
   #print(self.entry_2.get())
@@ -549,8 +552,10 @@ class gui:
   result = cursor.fetchone()
   if result:
    word = T.selection_get()
+   index_start=T.count("1.0", "sel.first")[0]
+   index_end=len(word) + int(index_start)
    category = self.submitCat.get() 
-   sql2 = """INSERT INTO %s (word,category) VALUES ('%s','%s')""" % (self.name,word,category)
+   sql2 = """INSERT INTO %s (word,category,start_index,end_index) VALUES ('%s','%s','%s','%s')""" % (self.name,word,category,str(index_start),str(index_end))
    cursor.execute(sql2)
    db.commit()
   else:
@@ -558,11 +563,15 @@ class gui:
        `id` INT NOT NULL AUTO_INCREMENT,
        `word` VARCHAR(50) NULL DEFAULT '',
        `category` VARCHAR(50) NULL DEFAULT '',
+       `start_index` VARCHAR(50) NULL DEFAULT '',
+       `end_index` VARCHAR(50) NULL DEFAULT '',
        PRIMARY KEY (id))COLLATE='utf8_bin'""" % self.name
    cursor.execute(sql2)
    word = T.selection_get()
+   index_start=T.count("1.0", "sel.first")[0]
+   index_end=len(word) + int(index_start)
    category = self.submitCat.get()
-   sql3 = """INSERT INTO %s (word,category) VALUES ('%s','%s')""" % (self.name,word,category)
+   sql3 = """INSERT INTO %s (word,category,start_index,end_index) VALUES ('%s','%s','%s','%s')""" % (self.name,word,category,str(index_start),str(index_end))
    cursor.execute(sql3)
    db.commit()
   db.close()
@@ -570,10 +579,17 @@ class gui:
 
  
  
+ """Method to close Manually Annotate Window"""
+
  def done(self,widget):
   widget.destroy()
 
-    
+   
+
+
+
+ """Method to get the list of manual annotations done by users over a particular document from the central database."""
+
  def getManual(self):
   if hasattr(self,'name'):
     manualAnnot=Toplevel()
@@ -604,12 +620,21 @@ class gui:
     messagebox.showinfo("Error! Oops",content)
 
 
+
+
+ """Method to set icon for every new window that opens."""
+
  def icon(self,window):
   icon = tkinter.Image("photo", file="/home/"+getpass.getuser()+"/TextMiner/Data/icon.png")
   window.tk.call('wm','iconphoto',window._w,icon)
 
+
+
+
+ """Method to connect with the application with central server to do database queries."""
+
  def databaseConnection(self):
-  database=MySQLdb.connect(host="localhost",user="root",passwd="",db="TextMiner",unix_socket="/opt/lampp/var/mysql/mysql.sock")
+  database=MySQLdb.connect(host=self.ip,user="root",passwd="",db="TextMiner",unix_socket="/opt/lampp/var/mysql/mysql.sock")
   return database
 
 
