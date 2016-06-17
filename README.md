@@ -120,6 +120,16 @@ $ sudo apt-get install libtiff5-dev libjpeg8-dev zlib1g-dev libfreetype6-dev lib
 $ sudo apt-get install python3-pil.imagetk OR $ sudo apt-get install python3-imaging-tk
 
 ```
+#Setting up the server:
+
+###Download and install XAMPP server for Linux.[https://www.apachefriends.org/index.html]
+
+
+###To Start the XAMPP Server:
+```
+$ sudo /opt/lampp/lampp start
+
+```
 
 #To download and run this application
 
